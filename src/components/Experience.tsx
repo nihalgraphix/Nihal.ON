@@ -1,12 +1,20 @@
+import { motion } from 'motion/react';
 import { EXPERIENCE_LIST } from '../data/portfolioData';
-import { Briefcase, Calendar, MapPin, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { containerVariants, itemVariants } from './AnimatedSection';
+import { Briefcase, Calendar, MapPin, CheckCircle2 } from 'lucide-react';
 
 export default function Experience() {
   return (
     <section id="experience" className="relative py-28 bg-[#090909] overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+        >
           <div>
             <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
               <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -19,12 +27,22 @@ export default function Experience() {
           <p className="text-neutral-400 max-w-md text-sm font-sans leading-relaxed">
             Leading high-stakes creative direction and technical teams across top design agencies and venture-backed Silicon Valley startups.
           </p>
-        </div>
+        </motion.div>
 
         {/* Vertical Timeline */}
-        <div className="relative border-l-2 border-white/10 ml-4 lg:ml-8 space-y-12">
-          {EXPERIENCE_LIST.map((exp, idx) => (
-            <div key={exp.id} className="relative pl-8 sm:pl-12 group">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={containerVariants}
+          className="relative border-l-2 border-white/10 ml-4 lg:ml-8 space-y-12"
+        >
+          {EXPERIENCE_LIST.map((exp) => (
+            <motion.div
+              key={exp.id}
+              variants={itemVariants}
+              className="relative pl-8 sm:pl-12 group"
+            >
               {/* Timeline Indicator Node */}
               <div
                 className={`absolute -left-[17px] top-1.5 h-8 w-8 rounded-full border-2 flex items-center justify-center transition-colors ${
@@ -96,9 +114,9 @@ export default function Experience() {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

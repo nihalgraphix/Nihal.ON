@@ -17,7 +17,13 @@ export default function FAQ() {
     <section id="faq" className="relative py-28 bg-[#060606] overflow-hidden">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto mb-12"
+        >
           <div className="inline-flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
             <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
             <span>Got Questions?</span>
@@ -25,7 +31,7 @@ export default function FAQ() {
           <h2 className="font-syne text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
             Frequently Asked Questions
           </h2>
-        </div>
+        </motion.div>
 
         {/* Category Filters */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">

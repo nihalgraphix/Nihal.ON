@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+import { containerVariants, itemVariants } from './AnimatedSection';
 import { Github, GitCommit, GitPullRequest, Star, Sparkles } from 'lucide-react';
 
 export default function Stats() {
@@ -21,15 +23,23 @@ export default function Stats() {
     <section className="relative py-20 bg-[#090909] border-y border-white/10 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Stats Counter Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+        >
           {[
             { value: "150+", label: "Projects Completed", subtitle: "Web apps, design systems & mobile" },
             { value: "98%", label: "Client Satisfaction", subtitle: "5-star rating on all case studies" },
             { value: "50+", label: "Global Clients", subtitle: "Silicon Valley, London, Paris, Tokyo" },
             { value: "6+", label: "Years Experience", subtitle: "Senior creative & full-stack role" }
           ].map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
+              variants={itemVariants}
+              whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
               className="glass-card glass-card-hover p-8 rounded-3xl border border-white/10 text-center space-y-2"
             >
               <div className="font-syne text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#FF5A1F]">
@@ -37,9 +47,9 @@ export default function Stats() {
               </div>
               <div className="font-syne font-bold text-white text-base">{item.label}</div>
               <div className="text-xs text-neutral-400 font-space">{item.subtitle}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* GitHub Contributions & Open Source Activity */}
         <div className="glass-card p-8 rounded-3xl border border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">

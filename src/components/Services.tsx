@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { SERVICES } from '../data/portfolioData';
+import { containerVariants, itemVariants } from './AnimatedSection';
 import {
   Layout,
   Monitor,
@@ -9,8 +11,7 @@ import {
   Bot,
   CheckCircle2,
   Clock,
-  ArrowRight,
-  ShieldCheck
+  ArrowRight
 } from 'lucide-react';
 
 export default function Services() {
@@ -35,7 +36,13 @@ export default function Services() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+        >
           <div>
             <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
               <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -48,13 +55,21 @@ export default function Services() {
           <p className="text-neutral-400 max-w-md text-sm font-sans leading-relaxed">
             Tailored execution for venture-backed founders, creative directors, and ambitious enterprises seeking Awwwards-grade digital presence.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Services Grid with Staggered Scroll Animation */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {SERVICES.map((service) => (
-            <div
+            <motion.div
               key={service.id}
+              variants={itemVariants}
+              whileHover={{ y: -6, transition: { duration: 0.3 } }}
               className="group glass-card glass-card-hover p-8 rounded-3xl border border-white/10 flex flex-col justify-between transition-all"
             >
               <div>
@@ -111,9 +126,9 @@ export default function Services() {
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

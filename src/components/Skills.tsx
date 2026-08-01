@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { SKILL_CATEGORIES } from '../data/portfolioData';
+import { containerVariants, itemVariants } from './AnimatedSection';
 import {
   Code2,
   Globe,
@@ -16,8 +18,7 @@ import {
   Cloud,
   Bot,
   Sparkles,
-  Layers,
-  Volume2
+  Layers
 } from 'lucide-react';
 
 export default function Skills() {
@@ -51,7 +52,13 @@ export default function Skills() {
     <section id="skills" className="relative py-28 bg-[#060606] overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+        >
           <div>
             <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
               <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -68,7 +75,7 @@ export default function Skills() {
               <button
                 key={cat.category}
                 onClick={() => setActiveCategory(cat.category)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold font-space transition-all ${
+                className={`px-4 py-2 rounded-xl text-xs font-semibold font-space transition-all cursor-pointer ${
                   activeCategory === cat.category
                     ? 'bg-[#FF5A1F] text-black shadow-lg shadow-[#FF5A1F]/30'
                     : 'text-neutral-400 hover:text-white'
@@ -78,47 +85,61 @@ export default function Skills() {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentCatObj.items.map((skill, index) => (
-            <div
-              key={index}
-              className="glass-card glass-card-hover p-6 rounded-3xl border border-white/10 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FF5A1F]/10 border border-[#FF5A1F]/30">
-                    {getSkillIcon(skill.icon)}
+        {/* Skills Grid with AnimatePresence */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial="hidden"
+            animate="visible"
+            exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+            variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {currentCatObj.items.map((skill, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="glass-card glass-card-hover p-6 rounded-3xl border border-white/10 space-y-4"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FF5A1F]/10 border border-[#FF5A1F]/30">
+                      {getSkillIcon(skill.icon)}
+                    </div>
+                    <div>
+                      <h3 className="font-syne font-bold text-white text-base">{skill.name}</h3>
+                      <span className="text-[11px] font-space text-neutral-400">{skill.experienceYears}</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-syne font-bold text-white text-base">{skill.name}</h3>
-                    <span className="text-[11px] font-space text-neutral-400">{skill.experienceYears}</span>
+
+                  <span className="rounded-full bg-[#FF5A1F]/15 border border-[#FF5A1F]/40 px-3 py-1 text-[10px] font-space font-bold text-[#FF5A1F]">
+                    {skill.tag || 'Expert'}
+                  </span>
+                </div>
+
+                {/* Animated Progress Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-space text-neutral-400">
+                    <span>Proficiency</span>
+                    <span className="text-white font-bold">{skill.level}%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${skill.level}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+                      className="h-full rounded-full bg-gradient-to-r from-[#FF5A1F] to-orange-400 shadow-md shadow-[#FF5A1F]/50"
+                    />
                   </div>
                 </div>
-
-                <span className="rounded-full bg-[#FF5A1F]/15 border border-[#FF5A1F]/40 px-3 py-1 text-[10px] font-space font-bold text-[#FF5A1F]">
-                  {skill.tag || 'Expert'}
-                </span>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-space text-neutral-400">
-                  <span>Proficiency</span>
-                  <span className="text-white font-bold">{skill.level}%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#FF5A1F] to-orange-400 shadow-md shadow-[#FF5A1F]/50 transition-all duration-1000"
-                    style={{ width: `${skill.level}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

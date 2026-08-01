@@ -33,7 +33,13 @@ export default function Gallery() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto mb-14 space-y-3"
+        >
           <div className="inline-flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] px-3.5 py-1.5 rounded-full bg-[#FF5A1F]/10 border border-[#FF5A1F]/20">
             <Sparkles className="h-3.5 w-3.5 text-[#FF5A1F]" />
             <span>Visual Archive & Showcase</span>
@@ -44,7 +50,7 @@ export default function Gallery() {
           <p className="text-xs sm:text-sm text-neutral-400 font-sans max-w-xl mx-auto">
             Selected and popular creative posts, spatial visual concepts, and art direction highlights.
           </p>
-        </div>
+        </motion.div>
 
         {/* 3D Cover Flow Perspective Carousel */}
         <div className="relative w-full h-[420px] sm:h-[500px] flex items-center justify-center [perspective:1200px] select-none my-4">

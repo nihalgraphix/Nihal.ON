@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import {
   Mail,
   Phone,
@@ -127,7 +128,13 @@ export default function Contact() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Heading & Direct Info */}
-          <div className="lg:col-span-5 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 space-y-8"
+          >
             <div>
               <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
                 <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -249,10 +256,16 @@ export default function Contact() {
                 })}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Exact Form matching user design */}
-          <div className="lg:col-span-7">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="lg:col-span-7"
+          >
             <div className="glass-card p-8 sm:p-12 rounded-3xl border border-white/10 space-y-6 bg-[#0f0f11]">
               {formSubmitted ? (
                 <div className="p-8 rounded-3xl bg-[#FF5A1F]/10 border border-[#FF5A1F]/50 text-center space-y-3">
@@ -328,7 +341,7 @@ export default function Contact() {
                 </form>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

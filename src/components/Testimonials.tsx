@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { TESTIMONIALS } from '../data/portfolioData';
 import { Star, Quote } from 'lucide-react';
 
@@ -7,7 +8,13 @@ export default function Testimonials() {
       {/* Background Ambient Glow */}
       <div className="pointer-events-none absolute top-1/2 right-0 h-96 w-96 rounded-full bg-[#FF5A1F]/10 blur-[160px]" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 mb-16"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
             <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -17,7 +24,7 @@ export default function Testimonials() {
             What Founders & Leaders Say
           </h2>
         </div>
-      </div>
+      </motion.div>
 
       {/* Infinite Testimonial Slider */}
       <div className="relative flex overflow-x-hidden">

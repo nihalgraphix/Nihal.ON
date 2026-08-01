@@ -49,7 +49,13 @@ export default function About() {
         {/* Split Editorial Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Image & Stats Badges */}
-          <div className="lg:col-span-5 relative">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 relative"
+          >
             <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl">
               <img
                 src={aboutPortrait}
@@ -73,10 +79,16 @@ export default function About() {
                 <Globe className="h-6 w-6 text-[#FF5A1F]" />
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Tabbed Content & Story */}
-          <div className="lg:col-span-7 flex flex-col space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="lg:col-span-7 flex flex-col space-y-8"
+          >
             {/* Nav Tabs */}
             <div className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-[#111111] border border-white/10 w-fit">
               {tabItems.map((tab) => {
@@ -206,7 +218,7 @@ export default function About() {
                 <Zap className="h-3.5 w-3.5" />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

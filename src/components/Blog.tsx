@@ -26,7 +26,13 @@ export default function Blog() {
     <section id="blog" className="relative py-28 bg-[#090909] overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6"
+        >
           <div>
             <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
               <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
@@ -73,7 +79,7 @@ export default function Blog() {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Slidable Blog Cards Horizontal Container */}
         <div

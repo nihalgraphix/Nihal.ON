@@ -1,0 +1,6 @@
+{
+  "name": "Nihal //Portfolio",
+  "description": "Award-winning dark futuristic portfolio website featuring editorial layouts, glassmorphism, interactive case studies, GSAP scroll animations, and AI portfolio assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

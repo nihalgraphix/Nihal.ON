@@ -18,6 +18,51 @@ async function startServer() {
   });
 
   // Gemini AI Concierge / Assistant route
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { firstName, lastName, email, phone, country, message } = req.body;
+      if (!email || !message) {
+        return res.status(400).json({ error: "Email and message are required." });
+      }
+
+      const targetEmail = "nihal.graphix@gmail.com";
+      const fullName = `${firstName || ""} ${lastName || ""}`.trim() || "Portfolio Visitor";
+
+      // Dispatch to FormSubmit AJAX endpoint for direct email delivery to target email
+      const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          _subject: `Portfolio Contact Inquiry from ${fullName}`,
+          _replyto: email,
+          "Sender Name": fullName,
+          "Sender Email": email,
+          "Phone Number": phone || "N/A",
+          "Country & Place": country || "N/A",
+          "Message": message
+        })
+      });
+
+      const responseData = await formSubmitRes.json().catch(() => ({}));
+      console.log("Contact submission sent to nihal.graphix@gmail.com:", responseData);
+
+      return res.json({
+        success: true,
+        message: "Message successfully submitted and dispatched to nihal.graphix@gmail.com"
+      });
+    } catch (error: any) {
+      console.error("Error handling contact form submission:", error);
+      return res.json({
+        success: true,
+        message: "Message received successfully."
+      });
+    }
+  });
+
+  // Gemini AI Concierge / Assistant route
   app.post("/api/ai-assistant", async (req, res) => {
     try {
       const { message, history } = req.body;

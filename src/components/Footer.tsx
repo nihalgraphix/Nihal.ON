@@ -31,11 +31,11 @@ export default function Footer({
   };
 
   const socialLinks = [
-    { name: 'X', handle: '@alexvance', url: PERSONAL_INFO.twitter, icon: '𝕏' },
-    { name: 'Instagram', handle: '@alexvance', url: PERSONAL_INFO.instagram, icon: '📸' },
-    { name: 'Dribbble', handle: '@alexvance', url: PERSONAL_INFO.dribbble, icon: '🎨' },
-    { name: 'YouTube', handle: '@alexvance', url: 'https://youtube.com', icon: '▶' },
-    { name: 'GitHub', handle: '@alexvance', url: PERSONAL_INFO.github, icon: '💼' }
+    { name: 'X', handle: '@nihal.on', url: PERSONAL_INFO.twitter, icon: '𝕏' },
+    { name: 'Instagram', handle: '@nihal.on', url: PERSONAL_INFO.instagram, icon: '📸' },
+    { name: 'Dribbble', handle: '@nihal.on', url: PERSONAL_INFO.dribbble, icon: '🎨' },
+    { name: 'YouTube', handle: '@nihal.on', url: 'https://youtube.com', icon: '▶' },
+    { name: 'GitHub', handle: '@nihal.on', url: PERSONAL_INFO.github, icon: '💼' }
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function Footer({
           {/* Column 1: Bio Statement (lg:col-span-4) */}
           <div className="lg:col-span-4 pr-0 lg:pr-6">
             <h2 className="font-syne text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-snug">
-              Alex is independent creative director and solopreneur
+              Nihal is independent creative director and solopreneur
             </h2>
             <p className="mt-2 text-xs text-neutral-400 font-sans leading-relaxed">
               Crafting high-impact AI products, digital experiences, and brand identity systems for visionary founders worldwide.
@@ -143,7 +143,7 @@ export default function Footer({
 
           {/* Column 4: CTAs & Action Badges (lg:col-span-3) */}
           <div className="lg:col-span-3 flex flex-col justify-start space-y-4">
-            {/* Call Alex CTA */}
+            {/* Call Nihal CTA */}
             <div>
               <a
                 href="#contact"
@@ -154,7 +154,7 @@ export default function Footer({
                 }}
                 className="group flex items-center gap-2.5 text-base font-syne font-extrabold text-white hover:text-[#FF5A1F] transition-colors"
               >
-                <span>Call Alex</span>
+                <span>Call Nihal</span>
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FF5A1F] text-black text-xs transition-transform group-hover:scale-110 shadow-md">
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </span>
@@ -191,14 +191,14 @@ export default function Footer({
         {/* Center Giant Brand Display Typography matching the reference photo */}
         <div className="py-4 sm:py-6 flex items-center justify-center overflow-hidden select-none">
           <h1 className="font-syne font-black text-[11vw] lg:text-[100px] xl:text-[120px] leading-none tracking-tighter text-white uppercase w-full text-center hover:text-[#FF5A1F] transition-colors duration-500">
-            a l e x v a n c e
+            n i h a l . o n
           </h1>
         </div>
 
         {/* Bottom Metadata & Copyright Bar */}
         <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-space text-neutral-500">
           <div className="flex items-center gap-3">
-            <span>Alex Vance ©{new Date().getFullYear()}</span>
+            <span>Nihal . On ©{new Date().getFullYear()}</span>
             <span>•</span>
             <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
             <span>•</span>

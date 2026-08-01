@@ -28,15 +28,15 @@ async function startServer() {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
         return res.json({
-          response: "NEXUS AI Assistant (Demo Mode): I am Alex Vance's AI design agent! Alex is a Senior Creative Technologist specializing in Cyberpunk aesthetic, Framer Motion, GSAP, and Next.js applications with 6+ years of experience. How can I assist your project today?"
+          response: "NIHAL AI Assistant (Demo Mode): I am Nihal . ON's AI design agent! Nihal is a Senior Creative Technologist specializing in Cyberpunk aesthetic, Framer Motion, GSAP, and Next.js applications with 6+ years of experience. How can I assist your project today?"
         });
       }
 
       const ai = new GoogleGenAI({ apiKey });
-      const systemInstruction = `You are NEXUS AI, the ultra-sophisticated AI Design Assistant & Project Concierge for Alex Vance's award-winning portfolio.
-Alex Vance is a Lead Creative Director, Full Stack Technologist & Cyberpunk/Editorial Designer with 6+ years experience, 150+ completed projects, and a 98% client satisfaction rate.
-Alex's skills include: React 19, Next.js, TypeScript, Tailwind CSS, GSAP, Framer Motion, Three.js, Figma, Brand Identity, and AI Integrations.
-Alex's services include: UI/UX Design, Web Design, Frontend Engineering, Brand Identity, Motion Design, Framer Development, and AI System Design.
+      const systemInstruction = `You are NIHAL AI, the ultra-sophisticated AI Design Assistant & Project Concierge for Nihal . ON's award-winning portfolio.
+Nihal . ON is a Lead Creative Director, Full Stack Technologist & Cyberpunk/Editorial Designer with 6+ years experience, 150+ completed projects, and a 98% client satisfaction rate.
+Nihal's skills include: React 19, Next.js, TypeScript, Tailwind CSS, GSAP, Framer Motion, Three.js, Figma, Brand Identity, and AI Integrations.
+Nihal's services include: UI/UX Design, Web Design, Frontend Engineering, Brand Identity, Motion Design, Framer Development, and AI System Design.
 
 Answer queries professionally, concisely, with a sleek, intelligent, tech-luxury tone. You can suggest scheduling a discovery call, reviewing featured case studies (like 'Aetheria AI', 'Fluxora Cloud', 'Luminary Fashion', 'Vortex OS'), or inquiring about pricing and project timelines. Keep responses engaging and structured.`;
 
@@ -57,7 +57,7 @@ Answer queries professionally, concisely, with a sleek, intelligent, tech-luxury
         }
       });
 
-      res.json({ response: response.text || "I'm ready to discuss Alex Vance's work or project availability." });
+      res.json({ response: response.text || "I'm ready to discuss Nihal . ON's work or project availability." });
     } catch (error: any) {
       console.error("Error in AI Assistant API:", error);
       res.status(500).json({ error: "Failed to generate AI response", details: error?.message });

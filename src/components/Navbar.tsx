@@ -73,7 +73,7 @@ export default function Navbar({
               N
             </span>
             <span className="font-syne tracking-wider text-white group-hover:text-[#FF5A1F] transition-colors">
-              NEXUS
+              NIHAL
             </span>
           </a>
 

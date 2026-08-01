@@ -19,7 +19,7 @@ export default function AiAssistantModal({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hello! I'm NEXUS AI, Alex Vance's interactive portfolio guide. Ask me anything about Alex's case studies, design philosophy, tech stack (React 19, Next.js, Framer Motion), or project availability!"
+      content: "Hello! I'm NIHAL AI, Nihal . ON's interactive portfolio guide. Ask me anything about Nihal's case studies, design philosophy, tech stack (React 19, Next.js, Framer Motion), or project availability!"
     }
   ]);
   const [input, setInput] = useState('');
@@ -55,20 +55,20 @@ export default function AiAssistantModal({
       if (data.response) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
       } else {
-        setMessages(prev => [...prev, { role: 'assistant', content: "Alex is available for Q3/Q4 custom projects! You can book a 15-minute call directly or submit a project proposal in the Contact section." }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: "Nihal . ON is available for Q3/Q4 custom projects! You can book a 15-minute call directly or submit a project proposal in the Contact section." }]);
       }
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Alex Vance is a Senior Creative Technologist specializing in React 19, Framer Motion, and Awwwards-winning dark luxury web applications. Feel free to book a discovery call!" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Nihal . ON is a Senior Creative Technologist specializing in React 19, Framer Motion, and Awwwards-winning dark luxury web applications. Feel free to book a discovery call!" }]);
     } finally {
       setLoading(false);
     }
   };
 
   const samplePrompts = [
-    "What is Alex's design philosophy?",
-    "Show me Alex's top case studies",
+    "What is Nihal's design philosophy?",
+    "Show me Nihal's top case studies",
     "What is the typical project timeline?",
-    "How does Alex approach AI integrations?"
+    "How does Nihal approach AI integrations?"
   ];
 
   return (
@@ -87,7 +87,7 @@ export default function AiAssistantModal({
                 <Bot className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-syne font-bold text-white text-base">NEXUS AI Concierge</h3>
+                <h3 className="font-syne font-bold text-white text-base">NIHAL AI Concierge</h3>
                 <span className="text-[10px] font-space text-[#FF5A1F] font-semibold">Powered by Gemini 2.5 Flash</span>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function AiAssistantModal({
             {loading && (
               <div className="flex gap-3 items-center text-xs font-space text-[#FF5A1F]">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>NEXUS AI is synthesizing response...</span>
+                <span>NIHAL AI is synthesizing response...</span>
               </div>
             )}
             <div ref={chatEndRef} />
@@ -159,7 +159,7 @@ export default function AiAssistantModal({
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
-              placeholder="Ask AI about Alex's projects, pricing, or tech stack..."
+              placeholder="Ask AI about Nihal's projects, pricing, or tech stack..."
               className="flex-1 rounded-xl bg-[#090909] border border-white/10 px-4 py-3 text-xs sm:text-sm text-white placeholder-neutral-500 focus:border-[#FF5A1F] focus:outline-hidden"
             />
             <button

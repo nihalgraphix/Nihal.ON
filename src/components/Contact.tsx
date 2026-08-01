@@ -272,7 +272,7 @@ export default function Contact() {
                   <CheckCircle2 className="h-12 w-12 text-[#FF5A1F] mx-auto" />
                   <h4 className="font-syne text-xl font-bold text-white">Message Dispatched!</h4>
                   <p className="text-xs text-neutral-300 font-sans">
-                    Thank you for reaching out. Alex will review your message and respond shortly.
+                    Thank you for reaching out. Nihal . ON will review your message and respond shortly.
                   </p>
                 </div>
               ) : (

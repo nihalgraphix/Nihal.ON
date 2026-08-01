@@ -16,7 +16,7 @@ import aboutPortrait from '../assets/images/about_portrait_1785413022971.jpg';
 export { heroPortrait, aboutPortrait };
 
 export const PERSONAL_INFO = {
-  name: "Alex Vance",
+  name: "Nihal . ON",
   title: "Senior Creative Technologist & Design Director",
   tagline: "Building Digital Experiences That Feel Premium.",
   location: "San Francisco, CA // Remote Worldwide",
@@ -25,7 +25,7 @@ export const PERSONAL_INFO = {
   projectsCompleted: "150+",
   clientSatisfaction: "98%",
   happyClients: "50+",
-  email: "alex@vancedesign.co",
+  email: "hello@nihal.on",
   phone: "+1 (415) 890-3211",
   github: "https://github.com",
   linkedin: "https://linkedin.com",
@@ -88,7 +88,7 @@ export const PROJECTS: Project[] = [
       "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop"
     ],
     clientFeedback: {
-      quote: "Alex transformed our entire brand narrative. The website doesn't just look like a winner on Awwwards—it drove our biggest enterprise quarter in company history.",
+      quote: "Nihal . ON transformed our entire brand narrative. The website doesn't just look like a winner on Awwwards—it drove our biggest enterprise quarter in company history.",
       author: "Marcus Thorne",
       role: "Chief Marketing Officer",
       company: "Fluxora Global",
@@ -123,7 +123,7 @@ export const PROJECTS: Project[] = [
       "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop"
     ],
     clientFeedback: {
-      quote: "Alex has that rare blend of extreme aesthetic vision and rock-solid technical execution. Our user engagement tripled after launch.",
+      quote: "Nihal . ON has that rare blend of extreme aesthetic vision and rock-solid technical execution. Our user engagement tripled after launch.",
       author: "Dr. Elena Rostova",
       role: "VP of Design",
       company: "Aetheria AI",
@@ -387,7 +387,7 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
 export const EXPERIENCE_LIST: ExperienceItem[] = [
   {
     id: "exp-1",
-    company: "NEXUS Creative Studio",
+    company: "NIHAL Creative Studio",
     role: "Lead Creative Technologist & Director",
     period: "2023 - Present",
     location: "San Francisco, CA",
@@ -435,7 +435,7 @@ export const EXPERIENCE_LIST: ExperienceItem[] = [
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: "test-1",
-    quote: "Alex is in a league of his own. He took our rough concept and created an Awwwards-worthy portal that immediately established our enterprise credibility.",
+    quote: "Nihal . ON is in a league of his own. He took our rough concept and created an Awwwards-worthy portal that immediately established our enterprise credibility.",
     author: "Marcus Thorne",
     role: "Chief Marketing Officer",
     company: "Fluxora Global",
@@ -445,7 +445,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: "test-2",
-    quote: "Rarely do you find a designer who can write rock-solid TypeScript and implement complex WebGL motion smoothly. Alex delivered beyond all expectations.",
+    quote: "Rarely do you find a designer who can write rock-solid TypeScript and implement complex WebGL motion smoothly. Nihal . ON delivered beyond all expectations.",
     author: "Dr. Elena Rostova",
     role: "VP of Design",
     company: "Aetheria AI",
@@ -455,7 +455,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: "test-3",
-    quote: "Working with Alex felt like having an entire Apple-level design team at our fingertips. Our conversion rate increased by 185% in month one.",
+    quote: "Working with Nihal . ON felt like having an entire Apple-level design team at our fingertips. Our conversion rate increased by 185% in month one.",
     author: "David Chen",
     role: "Founder & CEO",
     company: "Krypton Web3",
@@ -465,7 +465,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: "test-4",
-    quote: "The level of polish, spatial typography, and responsive detail Alex brings to the table is mind-blowing. Highest recommendation possible.",
+    quote: "The level of polish, spatial typography, and responsive detail Nihal . ON brings to the table is mind-blowing. Highest recommendation possible.",
     author: "SOPHIA VALENTINA",
     role: "Creative Director",
     company: "Luminary Fashion Paris",
@@ -490,7 +490,7 @@ In this article, we explore:
     category: "Design Tips",
     readTime: "5 min read",
     date: "July 24, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
     tags: ["UI/UX", "Dark Mode", "Typography", "Aesthetics"]
   },
@@ -507,7 +507,7 @@ Key techniques covered:
     category: "Development",
     readTime: "7 min read",
     date: "July 12, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop",
     tags: ["React 19", "GSAP", "Performance", "Animation"]
   },
@@ -524,7 +524,7 @@ Benefits:
     category: "AI",
     readTime: "6 min read",
     date: "June 28, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1000&auto=format&fit=crop",
     tags: ["AI", "Gemini API", "Full-Stack", "Node.js"]
   },
@@ -541,7 +541,7 @@ In this guide, we break down:
     category: "UI/UX",
     readTime: "4 min read",
     date: "June 15, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000&auto=format&fit=crop",
     tags: ["UI/UX", "GSAP", "Dark Mode", "Aesthetics"]
   },
@@ -558,7 +558,7 @@ Key comparison points:
     category: "Strategy",
     readTime: "5 min read",
     date: "May 30, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1000&auto=format&fit=crop",
     tags: ["React 19", "Full-Stack", "UI/UX"]
   },
@@ -575,7 +575,7 @@ In this overview:
     category: "Design Systems",
     readTime: "6 min read",
     date: "May 18, 2026",
-    author: "Alex Vance",
+    author: "Nihal . ON",
     image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1000&auto=format&fit=crop",
     tags: ["Typography", "Aesthetics", "Dark Mode"]
   }

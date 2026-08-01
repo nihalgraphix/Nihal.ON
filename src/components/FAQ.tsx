@@ -108,7 +108,7 @@ export default function FAQ() {
             className="flex-shrink-0 flex items-center gap-2 rounded-full bg-[#FF5A1F] px-6 py-3 text-xs font-bold text-black hover:bg-orange-500 transition-colors"
           >
             <MessageSquare className="h-4 w-4" />
-            <span>Ask Alex Directly</span>
+            <span>Ask Nihal Directly</span>
           </button>
         </div>
       </div>

@@ -59,7 +59,7 @@ export default function About() {
             <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl">
               <img
                 src={aboutPortrait}
-                alt="Alex Vance Studio Portrait"
+                alt="Nihal . ON Studio Portrait"
                 referrerPolicy="no-referrer"
                 className="w-full h-[520px] object-cover object-center filter saturate-[1.1] contrast-[1.05] hover:scale-105 transition-transform duration-700"
               />

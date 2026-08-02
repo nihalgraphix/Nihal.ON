@@ -48,16 +48,12 @@ async function startServer() {
   }
 
   // Persistent webhook URL
-  let serverWebhookUrl: string | null = process.env.GOOGLE_SHEETS_WEBHOOK_URL || null;
-  if (fs.existsSync(WEBHOOK_FILE)) {
-    try {
-      const savedConfig = JSON.parse(fs.readFileSync(WEBHOOK_FILE, "utf-8"));
-      if (savedConfig.webhookUrl) {
-        serverWebhookUrl = savedConfig.webhookUrl;
-      }
-    } catch (e) {
-      console.error("Error loading persisted webhook URL:", e);
-    }
+  const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxNW40z9ak0LQvvT5dMqa4UTGWNASouVnUHmcFu5G9A2CQsLTxOSfd_r56gX-GUrGHJ/exec";
+  let serverWebhookUrl: string | null = DEFAULT_WEBHOOK_URL;
+  try {
+    fs.writeFileSync(WEBHOOK_FILE, JSON.stringify({ webhookUrl: serverWebhookUrl }, null, 2), "utf-8");
+  } catch (e) {
+    console.error("Error saving updated webhook URL:", e);
   }
 
   const saveMessages = () => {
@@ -218,15 +214,65 @@ async function startServer() {
       const targetWebhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL || webhookUrl || serverWebhookUrl;
       if (targetWebhook) {
         try {
-          const wRes = await fetch(targetWebhook, {
+          const fullPayload = {
+            timestamp,
+            Timestamp: timestamp,
+            date: timestamp,
+            Date: timestamp,
+            firstName: firstName || "",
+            "First Name": firstName || "",
+            Firstname: firstName || "",
+            first_name: firstName || "",
+            lastName: lastName || "",
+            "Last Name": lastName || "",
+            Lastname: lastName || "",
+            last_name: lastName || "",
+            name: fullName,
+            Name: fullName,
+            fullName: fullName,
+            "Full Name": fullName,
+            email: email || "",
+            Email: email || "",
+            phone: phone || "",
+            Phone: phone || "",
+            phone_number: phone || "",
+            "Phone Number": phone || "",
+            country: country || "",
+            Country: country || "",
+            "Country / Place": country || "",
+            message: message || "",
+            Message: message || "",
+            comments: message || "",
+            Comments: message || ""
+          };
+
+          const formParams = new URLSearchParams();
+          for (const [k, v] of Object.entries(fullPayload)) {
+            formParams.append(k, String(v));
+          }
+
+          const urlWithQuery = targetWebhook + (targetWebhook.includes("?") ? "&" : "?") + formParams.toString();
+
+          // Dispatch with JSON body and URL query parameters (text/plain avoids CORS preflight and allows JSON.parse in GAS)
+          let wRes = await fetch(urlWithQuery, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(newMsg),
+            body: JSON.stringify(fullPayload),
             redirect: "follow"
           });
+
           if (wRes.ok) {
             sheetAppended = true;
             console.log("Successfully posted message to Google Sheets Webhook URL");
+          } else {
+            // Fallback to URL-encoded form body
+            await fetch(urlWithQuery, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: formParams.toString(),
+              redirect: "follow"
+            });
+            sheetAppended = true;
           }
         } catch (wErr) {
           console.error("Error posting to Google Sheets Webhook URL:", wErr);

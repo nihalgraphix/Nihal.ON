@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
   Mail,
@@ -12,14 +12,6 @@ import {
   Youtube,
   Loader2,
   AlertCircle,
-  Table,
-  Copy,
-  Check,
-  ExternalLink,
-  ShieldCheck,
-  ChevronDown,
-  ChevronUp,
-  RefreshCw,
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
@@ -116,113 +108,14 @@ export default function Contact() {
     message: ''
   });
 
-  // Google Sheets integration state
-  const [webhookUrl, setWebhookUrl] = useState('');
-  const [isWebhookConfigured, setIsWebhookConfigured] = useState(false);
-  const [showSheetsConfig, setShowSheetsConfig] = useState(false);
-  const [isSavingWebhook, setIsSavingWebhook] = useState(false);
-  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
-  const [webhookStatusMsg, setWebhookStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [copiedScript, setCopiedScript] = useState(false);
-
-  useEffect(() => {
-    // Fetch initial Google Sheets Webhook status
-    fetch('/api/sheets/webhook')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.webhookUrl) {
-          setWebhookUrl(data.webhookUrl);
-        }
-        setIsWebhookConfigured(!!data.webhookConfigured);
-      })
-      .catch((err) => console.error('Error fetching sheets webhook state:', err));
-  }, []);
-
-  const handleSaveWebhook = async () => {
-    if (!webhookUrl.trim()) return;
-    setIsSavingWebhook(true);
-    setWebhookStatusMsg(null);
-    try {
-      const res = await fetch('/api/sheets/webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ webhookUrl: webhookUrl.trim() })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setIsWebhookConfigured(true);
-        setWebhookStatusMsg({ type: 'success', text: 'Google Apps Script Webhook saved!' });
-      }
-    } catch (e: any) {
-      setWebhookStatusMsg({ type: 'error', text: 'Failed to save Webhook URL.' });
-    } finally {
-      setIsSavingWebhook(false);
-    }
-  };
-
-  const handleTestWebhook = async () => {
-    setIsTestingWebhook(true);
-    setWebhookStatusMsg(null);
-    try {
-      const res = await fetch('/api/sheets/webhook/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ webhookUrl: webhookUrl.trim() })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setIsWebhookConfigured(true);
-        setWebhookStatusMsg({
-          type: 'success',
-          text: '✅ Connection Verified! Form submissions will write directly to your Google Sheet.'
-        });
-      } else {
-        setWebhookStatusMsg({
-          type: 'error',
-          text: data.error || 'Failed to connect. Make sure "Who has access" is set to "Anyone" in Google Apps Script.'
-        });
-      }
-    } catch (e: any) {
-      setWebhookStatusMsg({ type: 'error', text: e.message || 'Error testing Google Sheets URL.' });
-    } finally {
-      setIsTestingWebhook(false);
-    }
-  };
-
-  const appsScriptCode = `function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Timestamp", "First Name", "Last Name", "Email", "Phone", "Country", "Message"]);
-      sheet.getRange(1, 1, 1, 7).setFontWeight("bold").setBackground("#E8F0FE");
-    }
-    var data = JSON.parse(e.postData.contents);
-    sheet.appendRow([
-      data.timestamp || new Date().toLocaleString(),
-      data.firstName || "",
-      data.lastName || "",
-      data.email || "",
-      data.phone || "",
-      data.country || "",
-      data.message || ""
-    ]);
-    return ContentService.createTextOutput(JSON.stringify({ result: "success" })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ result: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-  }
-}`;
-
-  const handleCopyScript = () => {
-    navigator.clipboard.writeText(appsScriptCode);
-    setCopiedScript(true);
-    setTimeout(() => setCopiedScript(false), 2500);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    let sentSuccessfully = false;
+
+    // 1. Try server API endpoint (/api/contact)
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -232,22 +125,101 @@ export default function Contact() {
         body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
-      if (response.ok && data.success !== false) {
-        setFormSubmitted(true);
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          country: '',
-          message: ''
-        });
-      } else {
-        setErrorMessage(data.error || 'Failed to send message. Please try again.');
+      if (response.ok) {
+        const data = await response.json().catch(() => ({}));
+        if (data.success !== false) {
+          sentSuccessfully = true;
+        }
       }
     } catch (err) {
-      console.error('Contact submission error:', err);
+      console.warn('Backend API submission warning:', err);
+    }
+
+    // 2. Direct client-side dispatch if server API didn't return OK (e.g. static site or network issue)
+    if (!sentSuccessfully) {
+      const webhookUrl = "https://script.google.com/macros/s/AKfycbxNW40z9ak0LQvvT5dMqa4UTGWNASouVnUHmcFu5G9A2CQsLTxOSfd_r56gX-GUrGHJ/exec";
+      const timestamp = new Date().toLocaleString("en-US", { timeZoneName: "short" });
+      const fullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim() || "Portfolio Visitor";
+
+      // A. Direct FormSubmit AJAX dispatch
+      try {
+        await fetch('https://formsubmit.co/ajax/nihal.graphix@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject: `Portfolio Inquiry from ${fullName}`,
+            _replyto: formData.email,
+            "Sender Name": fullName,
+            "Sender Email": formData.email,
+            "Phone Number": formData.phone || "N/A",
+            "Country & Place": formData.country || "N/A",
+            "Message": formData.message
+          })
+        });
+        sentSuccessfully = true;
+      } catch (fErr) {
+        console.warn('Direct FormSubmit warning:', fErr);
+      }
+
+      // B. Direct Google Apps Script Webhook dispatch
+      try {
+        const fullPayload = {
+          timestamp,
+          Timestamp: timestamp,
+          date: timestamp,
+          Date: timestamp,
+          firstName: formData.firstName || "",
+          "First Name": formData.firstName || "",
+          Firstname: formData.firstName || "",
+          first_name: formData.firstName || "",
+          lastName: formData.lastName || "",
+          "Last Name": formData.lastName || "",
+          Lastname: formData.lastName || "",
+          last_name: formData.lastName || "",
+          name: fullName,
+          Name: fullName,
+          fullName: fullName,
+          "Full Name": fullName,
+          email: formData.email || "",
+          Email: formData.email || "",
+          phone: formData.phone || "",
+          Phone: formData.phone || "",
+          phone_number: formData.phone || "",
+          "Phone Number": formData.phone || "",
+          country: formData.country || "",
+          Country: formData.country || "",
+          "Country / Place": formData.country || "",
+          message: formData.message || "",
+          Message: formData.message || "",
+          comments: formData.message || "",
+          Comments: formData.message || ""
+        };
+
+        const params = new URLSearchParams();
+        for (const [k, v] of Object.entries(fullPayload)) {
+          params.append(k, String(v));
+        }
+
+        const webhookQueryUrl = webhookUrl + (webhookUrl.includes("?") ? "&" : "?") + params.toString();
+
+        await fetch(webhookQueryUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(fullPayload)
+        });
+        sentSuccessfully = true;
+      } catch (wErr) {
+        console.warn('Direct Google Apps Script warning:', wErr);
+      }
+    }
+
+    if (sentSuccessfully) {
       setFormSubmitted(true);
       setFormData({
         firstName: '',
@@ -257,9 +229,11 @@ export default function Contact() {
         country: '',
         message: ''
       });
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      setErrorMessage('Could not submit form. Please check your connection or try again.');
     }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -498,114 +472,6 @@ export default function Contact() {
                   </div>
                 </form>
               )}
-
-              {/* Discrete Owner Google Sheets Connection Control */}
-              <div className="pt-4 border-t border-white/10 font-sans">
-                <button
-                  type="button"
-                  onClick={() => setShowSheetsConfig(!showSheetsConfig)}
-                  className="w-full flex items-center justify-between text-xs text-neutral-400 hover:text-white transition-colors p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <Table className="h-4 w-4 text-[#34A853]" />
-                    <span className="font-semibold text-neutral-300">Google Sheets Direct Connection</span>
-                    {isWebhookConfigured ? (
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1 font-mono">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        Active
-                      </span>
-                    ) : (
-                      <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono">
-                        Not Linked
-                      </span>
-                    )}
-                  </div>
-                  {showSheetsConfig ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </button>
-
-                {showSheetsConfig && (
-                  <div className="mt-3 p-4 rounded-2xl bg-[#08080a] border border-white/10 space-y-4 text-xs">
-                    <div className="space-y-1.5">
-                      <label className="font-semibold text-neutral-200 block text-[11px]">
-                        Google Apps Script Web App URL:
-                      </label>
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                        <input
-                          type="url"
-                          placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                          value={webhookUrl}
-                          onChange={(e) => setWebhookUrl(e.target.value)}
-                          className="flex-1 rounded-xl bg-black px-3.5 py-2.5 text-xs text-white border border-neutral-700 outline-none focus:border-[#FF5A1F] font-mono"
-                        />
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={handleSaveWebhook}
-                            disabled={isSavingWebhook}
-                            className="bg-white hover:bg-neutral-200 text-black font-semibold px-3 py-2.5 rounded-xl text-xs transition-all disabled:opacity-50 cursor-pointer whitespace-nowrap"
-                          >
-                            {isSavingWebhook ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Save URL'}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={handleTestWebhook}
-                            disabled={isTestingWebhook || !webhookUrl}
-                            className="bg-[#34A853] hover:bg-[#2e9648] text-white font-semibold px-3.5 py-2.5 rounded-xl text-xs transition-all disabled:opacity-50 cursor-pointer whitespace-nowrap"
-                          >
-                            {isTestingWebhook ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Test Connection'}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {webhookStatusMsg && (
-                      <div
-                        className={`p-3 rounded-xl border text-xs leading-relaxed ${
-                          webhookStatusMsg.type === 'success'
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                            : 'bg-red-500/10 border-red-500/30 text-red-300'
-                        }`}
-                      >
-                        {webhookStatusMsg.text}
-                      </div>
-                    )}
-
-                    {/* How to setup Google Sheets in 30 seconds */}
-                    <div className="space-y-2 pt-2 border-t border-white/10 text-neutral-300">
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <span className="font-bold text-white text-[11px] uppercase tracking-wider font-space">
-                          1-Minute Google Sheet Link Guide:
-                        </span>
-                        <button
-                          type="button"
-                          onClick={handleCopyScript}
-                          className="inline-flex items-center gap-1.5 text-[11px] bg-[#FF5A1F]/20 hover:bg-[#FF5A1F]/30 text-[#FF5A1F] border border-[#FF5A1F]/30 px-2.5 py-1 rounded-lg font-mono transition-colors cursor-pointer"
-                        >
-                          {copiedScript ? (
-                            <>
-                              <Check className="h-3 w-3 text-emerald-400" />
-                              <span className="text-emerald-400 font-bold">Copied Script!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="h-3 w-3" />
-                              <span>Copy Apps Script Code</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      <ol className="list-decimal list-inside space-y-1 text-[11px] text-neutral-400 font-sans leading-relaxed">
-                        <li>Open your target Google Sheet in your Google account.</li>
-                        <li>Click <strong>Extensions &gt; Apps Script</strong> in the Google Sheets top menu.</li>
-                        <li>Paste the copied script code (replacing all default text) and click <strong>Deploy &gt; New deployment</strong>.</li>
-                        <li>Select type <strong>Web app</strong>, set <em>Execute as: Me</em>, and <em>Who has access: Anyone</em>.</li>
-                        <li>Click <strong>Deploy</strong>, copy the Web App URL, paste it into the input above, and click <strong>Test Connection</strong>!</li>
-                      </ol>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </motion.div>
         </div>

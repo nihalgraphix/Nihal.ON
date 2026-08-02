@@ -124,8 +124,9 @@ async function startServer() {
         try {
           await fetch(targetWebhook, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newMsg)
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(newMsg),
+            redirect: "follow"
           });
           console.log("Successfully posted message to Google Sheets Webhook URL");
         } catch (wErr) {

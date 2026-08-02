@@ -12,7 +12,13 @@ export default function Process() {
     <section id="process" className="relative py-28 bg-[#090909] overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <div className="inline-flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
             <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
             <span>Methodology</span>
@@ -23,15 +29,31 @@ export default function Process() {
           <p className="text-neutral-400 text-sm font-sans mt-3">
             A transparent, predictable process refined over 150+ successful deployments worldwide.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Horizontal / Grid Step Selectors */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-10">
+        {/* Horizontal / Grid Step Selectors with staggered scroll reveal */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.06 }
+            }
+          }}
+          className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-10"
+        >
           {PROCESS_STEPS.map((s) => (
-            <button
+            <motion.button
               key={s.step}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+              }}
               onClick={() => setActiveStep(s.step)}
-              className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+              className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                 activeStep === s.step
                   ? 'bg-[#FF5A1F] text-black border-[#FF5A1F] shadow-lg shadow-[#FF5A1F]/30 scale-105'
                   : 'bg-[#111111] text-neutral-300 border-white/10 hover:border-white/30'
@@ -43,9 +65,9 @@ export default function Process() {
               <span className="font-syne text-xs font-bold truncate mt-2">
                 {s.title.split(' ')[0]}
               </span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Selected Step Expanded Drawer Card */}
         <AnimatePresence mode="wait">

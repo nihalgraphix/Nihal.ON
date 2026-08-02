@@ -53,18 +53,22 @@ export default function FAQ() {
           ))}
         </div>
 
-        {/* Accordion List */}
+        {/* Accordion List with scroll reveal */}
         <div className="space-y-4">
           {filteredFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div
+              <motion.div
                 key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className="glass-card rounded-2xl border border-white/10 overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="flex w-full items-center justify-between p-6 text-left font-syne font-bold text-base sm:text-lg text-white hover:text-[#FF5A1F] transition-colors"
+                  className="flex w-full items-center justify-between p-6 text-left font-syne font-bold text-base sm:text-lg text-white hover:text-[#FF5A1F] transition-colors cursor-pointer"
                 >
                   <span className="flex items-center gap-3">
                     <span className="text-xs font-space text-[#FF5A1F]">0{idx + 1}</span>
@@ -92,13 +96,19 @@ export default function FAQ() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Still Have Questions CTA */}
-        <div className="mt-12 text-center p-8 rounded-3xl glass-card border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-12 text-center p-8 rounded-3xl glass-card border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
           <div className="text-left">
             <h4 className="font-syne font-bold text-white text-lg">Have a specific question about your project?</h4>
             <p className="text-xs text-neutral-400 font-sans">Let's discuss your timeline, tech stack requirements, and custom scope.</p>
@@ -110,7 +120,7 @@ export default function FAQ() {
             <MessageSquare className="h-4 w-4" />
             <span>Ask Nihal Directly</span>
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

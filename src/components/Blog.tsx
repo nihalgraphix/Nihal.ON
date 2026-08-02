@@ -86,9 +86,13 @@ export default function Blog() {
           ref={scrollRef}
           className="flex gap-6 sm:gap-8 overflow-x-auto pb-6 pt-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
-          {filteredPosts.map((post) => (
-            <div
+          {filteredPosts.map((post, index) => (
+            <motion.div
               key={post.id}
+              initial={{ opacity: 0, y: 35, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => setSelectedPost(post)}
               className="flex-shrink-0 w-[300px] sm:w-[370px] lg:w-[400px] snap-start group cursor-pointer rounded-3xl glass-card glass-card-hover overflow-hidden border border-white/10 flex flex-col justify-between transition-all duration-300"
             >
@@ -133,7 +137,7 @@ export default function Blog() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

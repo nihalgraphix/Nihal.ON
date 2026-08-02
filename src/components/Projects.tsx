@@ -192,8 +192,12 @@ export default function Projects({ onSelectProject }: ProjectsProps) {
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8"
             >
               {currentCards.map((card, index) => (
-                <div
+                <motion.div
                   key={`${card.id}-${index}`}
+                  initial={{ opacity: 0, y: 35, scale: 0.97 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   onClick={() => onSelectProject(card.projectRef.id)}
                   className="group relative cursor-pointer aspect-[2/3] w-full rounded-2xl overflow-hidden bg-[#0A0A0A] border border-white/10 shadow-2xl hover:border-[#FF5A1F]/60 transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between p-5 select-none"
                 >
@@ -342,7 +346,7 @@ export default function Projects({ onSelectProject }: ProjectsProps) {
                       </div>
                     </>
                   )}
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>

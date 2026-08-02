@@ -119,7 +119,7 @@ async function startServer() {
       }
 
       // 2. If client or server supplied Google Apps Script Webhook URL, post to it
-      const targetWebhook = webhookUrl || serverWebhookUrl;
+      const targetWebhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL || webhookUrl || serverWebhookUrl;
       if (targetWebhook) {
         try {
           await fetch(targetWebhook, {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import {
   Mail,
@@ -12,23 +12,8 @@ import {
   Youtube,
   Loader2,
   AlertCircle,
-  Table,
-  ExternalLink,
-  ShieldCheck,
-  RefreshCw,
-  X,
-  Download,
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { initAuth, googleSignIn, getAccessToken, logoutGoogle } from '../lib/firebaseAuth';
-import {
-  createContactSpreadsheet,
-  appendContactToSheet,
-  getStoredSpreadsheetId,
-  setStoredSpreadsheetId,
-  extractSpreadsheetId,
-  ContactMessageData
-} from '../lib/googleSheets';
 
 interface FloatingInputProps {
   label: string;
@@ -123,118 +108,18 @@ export default function Contact() {
     message: ''
   });
 
-  // Google Sheets integration states
-  const [userToken, setUserToken] = useState<string | null>(null);
-  const [spreadsheetId, setSpreadsheetId] = useState<string | null>(getStoredSpreadsheetId());
-  const [isConnectingSheets, setIsConnectingSheets] = useState(false);
-  const [sheetStatusMsg, setSheetStatusMsg] = useState<string | null>(null);
-  const [manualSheetInput, setManualSheetInput] = useState('');
-  const [showManualInput, setShowManualInput] = useState(false);
-  const [showMessagesModal, setShowMessagesModal] = useState(false);
-  const [storedMessages, setStoredMessages] = useState<any[]>([]);
-  const [showWebhookGuide, setShowWebhookGuide] = useState(false);
-
-  useEffect(() => {
-    // Listen for Google OAuth state
-    const unsubscribe = initAuth(
-      async (user, token) => {
-        setUserToken(token);
-        if (token) {
-          try {
-            const sheetId = await createContactSpreadsheet(token);
-            setSpreadsheetId(sheetId);
-            setSheetStatusMsg('Google Sheets sync active for nihal.graphix@gmail.com');
-          } catch (e) {
-            console.error('Spreadsheet init error:', e);
-          }
-        }
-      },
-      () => {
-        setUserToken(null);
-      }
-    );
-    return () => unsubscribe();
-  }, []);
-
-  const handleConnectGoogleSheets = async (forceNew = false) => {
-    setIsConnectingSheets(true);
-    setSheetStatusMsg(null);
-    try {
-      const res = await googleSignIn();
-      if (res) {
-        setUserToken(res.accessToken);
-        const sheetId = await createContactSpreadsheet(res.accessToken, forceNew);
-        setSpreadsheetId(sheetId);
-        setSheetStatusMsg(
-          forceNew
-            ? 'New Google Sheet created in Google Drive!'
-            : 'Google Sheets connected! Submissions will save directly.'
-        );
-      }
-    } catch (err: any) {
-      console.error('Failed to connect Google Sheets:', err);
-      setSheetStatusMsg('Google Sheets connection canceled or failed.');
-    } finally {
-      setIsConnectingSheets(false);
-    }
-  };
-
-  const handleSetManualSheet = () => {
-    if (!manualSheetInput.trim()) return;
-    const extracted = extractSpreadsheetId(manualSheetInput);
-    setSpreadsheetId(extracted);
-    setStoredSpreadsheetId(extracted);
-    setSheetStatusMsg(`Linked Spreadsheet ID: ${extracted}`);
-    setShowManualInput(false);
-    setManualSheetInput('');
-  };
-
-  const fetchServerMessages = async () => {
-    try {
-      const res = await fetch('/api/messages');
-      const data = await res.json();
-      if (data.messages) {
-        setStoredMessages(data.messages);
-      }
-    } catch (e) {
-      console.error('Error fetching messages:', e);
-    }
-  };
-
-  useEffect(() => {
-    fetchServerMessages();
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
 
     try {
-      // 1. If Google token & spreadsheet ID available, append to Google Sheet directly
-      const currentToken = userToken || getAccessToken();
-      const currentSheetId = spreadsheetId || getStoredSpreadsheetId();
-
-      let directSheetAppended = false;
-      if (currentToken && currentSheetId) {
-        try {
-          directSheetAppended = await appendContactToSheet(currentToken, currentSheetId, formData);
-        } catch (sErr) {
-          console.warn('Direct client sheet append failed, passing to backend:', sErr);
-        }
-      }
-
-      // 2. Dispatch submission to backend API (which sends email and attempts sheet append)
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          ...formData,
-          accessToken: currentToken || undefined,
-          spreadsheetId: currentSheetId || undefined
-        })
+        body: JSON.stringify(formData)
       });
 
       const data = await response.json();
@@ -484,21 +369,6 @@ export default function Contact() {
                     </div>
                   )}
 
-                  {/* Discrete Owner Admin Link */}
-                  <div className="pt-2 text-center font-sans">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        fetchServerMessages();
-                        setShowMessagesModal(true);
-                      }}
-                      className="inline-flex items-center gap-2 text-[11px] text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer py-1 px-2.5 rounded-lg hover:bg-white/5"
-                    >
-                      <Table className="h-3 w-3 text-[#34A853]" />
-                      <span>Owner Admin: Submissions & Google Sheets Export</span>
-                    </button>
-                  </div>
-
                   {/* Row 5: Submit button */}
                   <div>
                     <button
@@ -522,109 +392,6 @@ export default function Contact() {
           </motion.div>
         </div>
       </div>
-
-      {/* Messages & Google Sheets Sync Modal */}
-      {showMessagesModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="relative w-full max-w-3xl rounded-3xl bg-[#141416] border border-white/10 p-6 sm:p-8 space-y-6 text-white font-sans max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <Table className="h-5 w-5 text-[#34A853]" />
-                <h3 className="text-lg font-bold font-syne">Submitted Contact Messages Log</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowMessagesModal(false)}
-                className="p-2 rounded-full hover:bg-white/10 text-neutral-400 hover:text-white transition-all"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between flex-wrap gap-3 bg-white/5 p-4 rounded-2xl border border-white/5 text-xs">
-              <div>
-                <p className="font-semibold text-neutral-200">Google Account: <span className="text-[#FF5A1F]">nihal.graphix@gmail.com</span></p>
-                <p className="text-neutral-400 text-[11px] mt-0.5">
-                  Spreadsheet Status: {spreadsheetId ? <span className="text-emerald-400">Linked ({spreadsheetId})</span> : <span className="text-amber-400">Not Linked Yet</span>}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <a
-                  href="/api/messages/csv"
-                  download="nihal_portfolio_messages.csv"
-                  className="inline-flex items-center gap-1.5 bg-[#FF5A1F] hover:bg-[#ff6f3d] text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all shadow-sm"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  <span>Download Google Sheets CSV</span>
-                </a>
-                {spreadsheetId && (
-                  <a
-                    href={`https://docs.google.com/spreadsheets/d/${spreadsheetId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-emerald-400 hover:underline font-semibold text-xs px-2"
-                  >
-                    <span>Open Sheet</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                )}
-              </div>
-            </div>
-
-            {/* Messages Table */}
-            {storedMessages.length === 0 ? (
-              <div className="text-center py-12 text-neutral-500 text-sm">
-                No contact messages recorded yet. Submit a message in the form above to see it appear here live!
-              </div>
-            ) : (
-              <div className="overflow-x-auto rounded-2xl border border-white/5">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-white/5 text-neutral-400 border-b border-white/10 uppercase tracking-wider text-[10px]">
-                      <th className="p-3">Time</th>
-                      <th className="p-3">Name</th>
-                      <th className="p-3">Email</th>
-                      <th className="p-3">Phone</th>
-                      <th className="p-3">Country</th>
-                      <th className="p-3">Message</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5 text-neutral-200">
-                    {storedMessages.map((m, idx) => (
-                      <tr key={m.id || idx} className="hover:bg-white/5 transition-all">
-                        <td className="p-3 text-neutral-400 font-mono text-[10px] whitespace-nowrap">{m.timestamp}</td>
-                        <td className="p-3 font-semibold whitespace-nowrap">{m.firstName} {m.lastName}</td>
-                        <td className="p-3 text-emerald-400">{m.email}</td>
-                        <td className="p-3 font-mono">{m.phone || '-'}</td>
-                        <td className="p-3">{m.country || '-'}</td>
-                        <td className="p-3 max-w-xs truncate" title={m.message}>{m.message}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            <div className="flex items-center justify-between pt-2 text-xs text-neutral-400">
-              <button
-                type="button"
-                onClick={fetchServerMessages}
-                className="inline-flex items-center gap-1.5 hover:text-white"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span>Refresh List</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowMessagesModal(false)}
-                className="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-xl"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

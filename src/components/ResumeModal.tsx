@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Download, FileText, CheckCircle2, Sparkles, ExternalLink } from 'lucide-react';
 import { PERSONAL_INFO, EXPERIENCE_LIST, SKILL_CATEGORIES } from '../data/portfolioData';
+import Logo from './Logo';
 
 export default function ResumeModal({
   isOpen,
@@ -23,8 +24,8 @@ export default function ResumeModal({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FF5A1F] text-black font-syne font-black">
-                AV
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black border border-white/20 p-2 shadow-lg shadow-[#FF5A1F]/30">
+                <Logo className="h-full w-full" />
               </div>
               <div>
                 <h2 className="font-syne text-2xl font-bold text-white">{PERSONAL_INFO.name}</h2>

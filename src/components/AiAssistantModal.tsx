@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Bot, Send, Sparkles, User, Loader2 } from 'lucide-react';
+import Logo from './Logo';
 
 interface AiAssistantModalProps {
   isOpen: boolean;
@@ -83,8 +84,8 @@ export default function AiAssistantModal({
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 bg-[#111111] px-6 py-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FF5A1F] text-black shadow-lg shadow-[#FF5A1F]/30">
-                <Bot className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black border border-white/20 p-1.5 shadow-lg shadow-[#FF5A1F]/30">
+                <Logo className="h-full w-full" />
               </div>
               <div>
                 <h3 className="font-syne font-bold text-white text-base">NIHAL AI Concierge</h3>

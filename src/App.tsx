@@ -16,6 +16,7 @@ import Experience from './components/Experience';
 import Testimonials from './components/Testimonials';
 import Blog from './components/Blog';
 import Gallery from './components/Gallery';
+import GalleryPage from './components/GalleryPage';
 import Stats from './components/Stats';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
@@ -25,6 +26,7 @@ import ResumeModal from './components/ResumeModal';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<string>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'gallery'>('home');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [aiModalOpen, setAiModalOpen] = useState<boolean>(false);
@@ -118,6 +120,27 @@ export default function App() {
       }
     }
   };
+
+  if (currentView === 'gallery') {
+    return (
+      <div className="relative min-h-screen bg-[#060606] text-[#E0E0E0] selection:bg-[#FF5A1F] selection:text-black font-sans antialiased">
+        <CustomCursor soundEnabled={soundEnabled} setSoundEnabled={setSoundEnabled} />
+        <GalleryPage
+          onBack={() => {
+            setCurrentView('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onNavigateSection={(secId) => {
+            setCurrentView('home');
+            setTimeout(() => {
+              const el = document.getElementById(secId);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 150);
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-[#060606] text-[#E0E0E0] selection:bg-[#FF5A1F] selection:text-black font-sans antialiased">
@@ -226,7 +249,7 @@ export default function App() {
           viewport={{ once: true, amount: 0.1, margin: "-40px" }}
           variants={sectionVariants}
         >
-          <Gallery />
+          <Gallery onOpenGalleryPage={() => setCurrentView('gallery')} />
         </motion.div>
 
         <motion.div

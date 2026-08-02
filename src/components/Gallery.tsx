@@ -4,7 +4,11 @@ import { GALLERY_ITEMS, PERSONAL_INFO } from '../data/portfolioData';
 import { GalleryItem } from '../types';
 import { ChevronLeft, ChevronRight, ArrowUpRight, Maximize2, Heart, X, Sparkles } from 'lucide-react';
 
-export default function Gallery() {
+interface GalleryProps {
+  onOpenGalleryPage?: () => void;
+}
+
+export default function Gallery({ onOpenGalleryPage }: GalleryProps = {}) {
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [showAllGrid, setShowAllGrid] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -214,15 +218,19 @@ export default function Gallery() {
 
           {/* "See More" Button Below Sliding Button */}
           <div className="pt-2">
-            <a
-              href={PERSONAL_INFO.dribbble || "https://dribbble.com"}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => {
+                if (onOpenGalleryPage) {
+                  onOpenGalleryPage();
+                } else {
+                  setShowAllGrid(!showAllGrid);
+                }
+              }}
               className="group flex items-center gap-2.5 rounded-full border border-white/25 bg-[#16161a] px-9 py-4 text-xs font-syne font-bold uppercase tracking-wider text-white hover:border-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-black transition-all duration-300 shadow-2xl active:scale-95 cursor-pointer"
             >
               <span>See More</span>
               <ArrowUpRight className="h-4 w-4 text-[#FF5A1F] group-hover:text-black transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </button>
           </div>
         </div>
 

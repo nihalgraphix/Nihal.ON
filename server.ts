@@ -1,10 +1,20 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
+
+// Ensure data directory exists for persistent storage
+const DATA_DIR = path.join(process.cwd(), "data");
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+const WEBHOOK_FILE = path.join(DATA_DIR, "webhook.json");
+const MESSAGES_FILE = path.join(DATA_DIR, "messages.json");
 
 async function startServer() {
   const app = express();
@@ -17,8 +27,8 @@ async function startServer() {
     res.json({ status: "ok", mode: process.env.NODE_ENV || "development" });
   });
 
-  // In-memory messages storage
-  const messagesStore: Array<{
+  // Persistent messages storage
+  let messagesStore: Array<{
     id: string;
     timestamp: string;
     firstName: string;
@@ -29,7 +39,42 @@ async function startServer() {
     message: string;
   }> = [];
 
-  let serverWebhookUrl: string | null = null;
+  if (fs.existsSync(MESSAGES_FILE)) {
+    try {
+      messagesStore = JSON.parse(fs.readFileSync(MESSAGES_FILE, "utf-8"));
+    } catch (e) {
+      console.error("Error loading persisted messages:", e);
+    }
+  }
+
+  // Persistent webhook URL
+  let serverWebhookUrl: string | null = process.env.GOOGLE_SHEETS_WEBHOOK_URL || null;
+  if (fs.existsSync(WEBHOOK_FILE)) {
+    try {
+      const savedConfig = JSON.parse(fs.readFileSync(WEBHOOK_FILE, "utf-8"));
+      if (savedConfig.webhookUrl) {
+        serverWebhookUrl = savedConfig.webhookUrl;
+      }
+    } catch (e) {
+      console.error("Error loading persisted webhook URL:", e);
+    }
+  }
+
+  const saveMessages = () => {
+    try {
+      fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messagesStore, null, 2), "utf-8");
+    } catch (e) {
+      console.error("Error saving messages file:", e);
+    }
+  };
+
+  const saveWebhook = (url: string | null) => {
+    try {
+      fs.writeFileSync(WEBHOOK_FILE, JSON.stringify({ webhookUrl: url }, null, 2), "utf-8");
+    } catch (e) {
+      console.error("Error saving webhook file:", e);
+    }
+  };
 
   // Endpoint to retrieve stored messages
   app.get("/api/messages", (_req, res) => {
@@ -37,11 +82,12 @@ async function startServer() {
       success: true,
       count: messagesStore.length,
       messages: messagesStore,
-      webhookConfigured: !!serverWebhookUrl
+      webhookConfigured: !!serverWebhookUrl,
+      webhookUrl: serverWebhookUrl
     });
   });
 
-  // Endpoint to download messages as CSV (for direct Google Sheets import)
+  // Endpoint to download messages as CSV
   app.get("/api/messages/csv", (_req, res) => {
     const headers = ["Timestamp", "First Name", "Last Name", "Email", "Phone", "Country / Place", "Message"];
     const csvRows = [headers.join(",")];
@@ -64,11 +110,58 @@ async function startServer() {
     res.status(200).send(csvRows.join("\n"));
   });
 
+  // Get current Webhook URL status
+  app.get("/api/sheets/webhook", (_req, res) => {
+    res.json({
+      success: true,
+      webhookUrl: serverWebhookUrl,
+      webhookConfigured: !!serverWebhookUrl
+    });
+  });
+
   // Save/configure Webhook URL
   app.post("/api/sheets/webhook", (req, res) => {
     const { webhookUrl } = req.body;
-    serverWebhookUrl = webhookUrl || null;
-    res.json({ success: true, webhookConfigured: !!serverWebhookUrl });
+    serverWebhookUrl = webhookUrl ? webhookUrl.trim() : null;
+    saveWebhook(serverWebhookUrl);
+    res.json({ success: true, webhookConfigured: !!serverWebhookUrl, webhookUrl: serverWebhookUrl });
+  });
+
+  // Test Webhook URL with a sample ping
+  app.post("/api/sheets/webhook/test", async (req, res) => {
+    const targetUrl = req.body.webhookUrl || serverWebhookUrl;
+    if (!targetUrl) {
+      return res.status(400).json({ error: "No Google Sheets Webhook URL configured. Please paste your Google Apps Script Web App URL first." });
+    }
+
+    const testPayload = {
+      id: `test_${Date.now()}`,
+      timestamp: new Date().toLocaleString("en-US", { timeZoneName: "short" }),
+      firstName: "Test",
+      lastName: "Sync",
+      email: "nihal.graphix@gmail.com",
+      phone: "+1 555-0199",
+      country: "System Test",
+      message: "⚡ Google Sheets integration connection test successfully verified!"
+    };
+
+    try {
+      const gRes = await fetch(targetUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(testPayload),
+        redirect: "follow"
+      });
+
+      if (gRes.ok) {
+        return res.json({ success: true, message: "Test payload sent to Google Sheets successfully! Check your spreadsheet." });
+      } else {
+        return res.status(500).json({ error: `Google Apps Script returned status ${gRes.status}` });
+      }
+    } catch (err: any) {
+      console.error("Webhook test failed:", err);
+      return res.status(500).json({ error: err?.message || "Failed to post to Google Sheets Webhook URL" });
+    }
   });
 
   // Contact Submission Route
@@ -92,9 +185,12 @@ async function startServer() {
       };
 
       messagesStore.unshift(newMsg);
+      saveMessages();
 
       const targetEmail = "nihal.graphix@gmail.com";
       const fullName = `${firstName || ""} ${lastName || ""}`.trim() || "Portfolio Visitor";
+
+      let sheetAppended = false;
 
       // 1. Dispatch to FormSubmit AJAX endpoint for direct email delivery
       try {
@@ -118,25 +214,27 @@ async function startServer() {
         console.warn("FormSubmit email dispatch error:", fErr);
       }
 
-      // 2. If client or server supplied Google Apps Script Webhook URL, post to it
+      // 2. If Google Apps Script Webhook URL is configured, post to Google Sheets
       const targetWebhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL || webhookUrl || serverWebhookUrl;
       if (targetWebhook) {
         try {
-          await fetch(targetWebhook, {
+          const wRes = await fetch(targetWebhook, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(newMsg),
             redirect: "follow"
           });
-          console.log("Successfully posted message to Google Sheets Webhook URL");
+          if (wRes.ok) {
+            sheetAppended = true;
+            console.log("Successfully posted message to Google Sheets Webhook URL");
+          }
         } catch (wErr) {
           console.error("Error posting to Google Sheets Webhook URL:", wErr);
         }
       }
 
       // 3. If client supplied Google OAuth Access Token & Spreadsheet ID, append via Google Sheets REST API
-      let sheetAppended = false;
-      if (spreadsheetId && accessToken) {
+      if (!sheetAppended && spreadsheetId && accessToken) {
         try {
           const rowValues = [
             timestamp,

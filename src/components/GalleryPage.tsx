@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, X, Maximize2, Download, Heart, Search, Filter, SlidersHorizontal, Image as ImageIcon, ArrowDown, Sparkles } from 'lucide-react';
+import { ArrowLeft, X, Maximize2, Download, Heart, Search, Filter, SlidersHorizontal, Image as ImageIcon, ArrowDown, Sparkles, Copy, Eye, ArrowRight } from 'lucide-react';
 import Logo from './Logo';
 
 interface GalleryPageProps {
@@ -278,203 +278,298 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
   return (
     <div className="min-h-screen bg-[#060606] text-white py-3 sm:py-5 px-3 sm:px-6 lg:px-10 selection:bg-[#FF5A1F] selection:text-black font-sans antialiased w-full">
       {/* Top Header Bar */}
-      <header className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 mb-4 sm:mb-6 w-full">
+      <header className="flex items-center justify-between py-3 px-4 sm:px-6 mb-6 w-full max-w-7xl mx-auto">
         {/* Left Brand */}
         <div
           onClick={onBack}
-          className="cursor-pointer group flex items-center gap-3"
+          className="cursor-pointer group flex items-center gap-2.5"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-black border border-white/20 p-1.5 shadow-lg shadow-[#FF5A1F]/20 group-hover:border-[#FF5A1F]/50 transition-all">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg overflow-hidden">
             <Logo className="h-full w-full" />
           </div>
-          <span className="font-syne font-bold text-base sm:text-lg text-white tracking-wider group-hover:text-[#FF5A1F] transition-colors">
-            NIHAL <span className="text-[#FF5A1F] font-light">/ GALLERY</span>
+          <span className="font-syne font-bold text-lg text-white tracking-tight">
+            Nihal Frames
           </span>
         </div>
 
-        {/* Center Location Meta */}
-        <div className="hidden md:flex items-center gap-2 text-xs font-mono text-neutral-400">
-          <span>Based in:</span>
-          <span className="font-bold text-[#FF5A1F]">AlUla & Global Routes</span>
-        </div>
-
-        {/* Right Navigation */}
-        <div className="flex items-center gap-3 sm:gap-5">
-          <nav className="hidden sm:flex items-center gap-5 text-xs sm:text-sm font-medium text-neutral-400">
-            <button
-              onClick={() => handleNavClick('home')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => handleNavClick('about')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              About
-            </button>
-            <button
-              onClick={() => handleNavClick('gallery')}
-              className="text-[#FF5A1F] font-bold border-b-2 border-[#FF5A1F] pb-0.5 cursor-pointer"
-            >
-              Gallery
-            </button>
-            <button
-              onClick={() => handleNavClick('contact')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Contact
-            </button>
-          </nav>
-
-          {/* Return Floating Badge Button */}
-          <button
-            onClick={onBack}
-            className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 px-3.5 py-1.5 text-xs font-syne font-bold text-white shadow-lg hover:bg-[#FF5A1F] hover:text-black hover:border-[#FF5A1F] transition-all cursor-pointer backdrop-blur-md"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Back to Portfolio</span>
-          </button>
-        </div>
+        {/* Right Back Button */}
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg hover:bg-white hover:text-black hover:border-white transition-all cursor-pointer backdrop-blur-md"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back</span>
+        </button>
       </header>
 
-      {/* Hero Section Banner - Ultra-Sleek Dark Luxury Compact Gallery Showcase */}
-      <div className="relative w-full rounded-[24px] sm:rounded-[32px] bg-[#07070a] text-white pt-5 sm:pt-7 pb-5 sm:pb-7 px-4 sm:px-6 shadow-2xl overflow-hidden border border-white/10 mb-4 text-center">
-        {/* Warm Ambient Glow Highlights */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] h-[200px] sm:h-[280px] bg-gradient-to-tr from-[#FF5A1F]/20 via-[#FF8A3D]/10 to-transparent blur-[100px] pointer-events-none rounded-full" />
+      {/* Main Dark Card Hero Showcase */}
+      <div className="relative w-full max-w-7xl mx-auto rounded-[32px] sm:rounded-[40px] bg-[#0c0c10] text-white pt-10 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-8 shadow-2xl overflow-hidden border border-white/10 mb-8 text-center">
+        {/* Subtle Ambient Top Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-gradient-to-b from-purple-900/15 via-red-900/10 to-transparent blur-[90px] pointer-events-none rounded-full" />
 
-        {/* Hero Title, Badge, and Compact Header Content */}
-        <div className="max-w-3xl mx-auto px-2 relative z-20">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-mono text-[#FF8A3D] shadow-sm backdrop-blur-md"
-          >
-            <Sparkles className="h-3 w-3 text-[#FF5A1F]" />
-            <span className="uppercase tracking-widest font-bold">Curated Exhibition & AI Archive</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="font-syne text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.1]"
-          >
-            Create & Explore{' '}
-            <span className="bg-gradient-to-r from-[#FF5A1F] via-[#FF8A3D] to-[#FFC107] bg-clip-text text-transparent">
-              Breathtaking Renders
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-2 text-xs sm:text-sm text-neutral-300 max-w-md mx-auto leading-relaxed font-sans"
-          >
-            High-definition visuals created with diffusion models, Arabian heritage concepts, and futuristic architecture.
-          </motion.p>
-
-          {/* Compact Filter Chips */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="mt-3.5 flex flex-wrap items-center justify-center gap-1.5 max-w-xl mx-auto"
-          >
-            {[
-              { label: '✨ All Renders', value: '' },
-              { label: '🏜️ Desert Dunes', value: 'desert' },
-              { label: '🏛️ AlUla Heritage', value: 'architecture' },
-              { label: '🌌 Night Stars', value: 'stars' },
-            ].map((chip) => (
-              <button
-                key={chip.label}
-                onClick={() => {
-                  setSearchQuery(chip.value);
-                  document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className={`px-2.5 py-0.5 rounded-full border text-[11px] font-sans transition-all cursor-pointer ${
-                  searchQuery === chip.value
-                    ? 'bg-[#FF5A1F] text-black border-[#FF5A1F] font-bold'
-                    : 'bg-white/5 border-white/10 text-neutral-300 hover:bg-[#FF5A1F]/20 hover:border-[#FF5A1F]/40 hover:text-white'
-                }`}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Arching Cards Showcase - Compact Height */}
-        <div className="relative w-full max-w-5xl mx-auto h-[150px] sm:h-[190px] md:h-[220px] mt-4 sm:mt-5 flex justify-center items-center overflow-visible z-20">
-          {/* Vertical Orange Accent Line */}
-          <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-gradient-to-b from-transparent via-[#FF5A1F] to-transparent shadow-[0_0_10px_#FF5A1F] z-30 pointer-events-none" />
-
-          {ARC_PHOTOS.map((item, idx) => {
-            const isCenter = item.isCenter;
-
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, scale: 0.7, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: idx * 0.04, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                onClick={() => {
-                  const fullPhoto = GALLERY_PHOTOS.find((p) => p.id === item.id) || GALLERY_PHOTOS[idx % GALLERY_PHOTOS.length];
-                  if (fullPhoto) setSelectedPhoto(fullPhoto);
-                }}
-                className={`absolute cursor-pointer group transition-all duration-300 ${isCenter ? 'z-40' : 'z-10 hover:z-30'}`}
-                style={{
-                  left: `calc(50% + ${(idx - 3) * 13.5}%)`,
-                  top: '50%',
-                  transform: `translate(-50%, calc(-50% + ${item.yOffset * 0.65}px)) rotate(${item.rotate}deg)`,
-                }}
-              >
-                <div className={`w-14 sm:w-20 md:w-26 lg:w-30 h-20 sm:h-28 md:h-[130px] lg:h-[155px] rounded-xl sm:rounded-2xl overflow-hidden bg-neutral-900 border-2 ${isCenter ? 'border-[#FF5A1F] shadow-[0_0_25px_rgba(255,90,31,0.45)] scale-105' : 'border-white/15 shadow-xl group-hover:border-[#FF5A1F] group-hover:scale-105'} transition-all duration-300 relative`}>
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    referrerPolicy="no-referrer"
-                    className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${item.extraClass || ''}`}
-                  />
-                  {isCenter && (
-                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-[#FF5A1F] shadow-[0_0_8px_#FF5A1F] z-10 pointer-events-none" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-1.5 flex items-end">
-                    <p className="text-[9px] sm:text-[10px] font-sans font-bold text-white line-clamp-1">
-                      {item.title}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Compact Horizontal Feature Bar */}
+        {/* Top Notification Badge Pill */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-4 sm:mt-5 pt-3.5 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-center max-w-2xl mx-auto z-20 relative text-xs text-neutral-300"
+          transition={{ delay: 0.1 }}
+          className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181820]/90 border border-white/10 text-xs text-neutral-300 shadow-inner backdrop-blur-md cursor-pointer hover:border-purple-500/40 transition-all"
         >
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A1F]" />
-            <span className="font-semibold text-white">8K Ultra-Sharp Renders</span>
-          </div>
-          <div className="hidden sm:block h-3 w-[1px] bg-white/10" />
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF8A3D]" />
-            <span className="font-semibold text-white">Arabian Heritage & Architecture</span>
-          </div>
-          <div className="hidden sm:block h-3 w-[1px] bg-white/10" />
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FFC107]" />
-            <span className="font-semibold text-white">Instant High-Res Exports</span>
-          </div>
+          <span>Try our personal cards now!</span>
+          <span className="text-[#a855f7] font-medium flex items-center gap-0.5">
+            Learn more <ArrowRight className="h-3 w-3" />
+          </span>
         </motion.div>
+
+        {/* Main Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+          className="font-sans text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-tight"
+        >
+          Create your <span className="font-semibold">FaceCards</span>
+        </motion.h1>
+
+        {/* Faded Secondary Headline */}
+        <motion.h2
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24 }}
+          className="font-sans text-2xl sm:text-4xl font-normal text-neutral-500 tracking-tight mt-1"
+        >
+          Express Yourself with this Cards
+        </motion.h2>
+
+        {/* Description Text */}
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-4 text-xs sm:text-sm text-neutral-400 max-w-lg mx-auto leading-relaxed font-sans"
+        >
+          With our cutting-edge FaceCards feature, you can now craft your own
+          personalized bank card based on your unique facial features.
+        </motion.p>
+
+        {/* Center Pill CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.36 }}
+          className="mt-6 flex justify-center"
+        >
+          <button
+            onClick={() => {
+              document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-black font-sans font-semibold text-xs sm:text-sm shadow-xl hover:bg-neutral-200 transition-all cursor-pointer hover:scale-105 group"
+          >
+            <span>Start today!</span>
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-white text-xs">
+              →
+            </div>
+          </button>
+        </motion.div>
+
+        {/* 3D FaceCards Showcase Deck with Speed-light Streaks Background */}
+        <div className="relative w-full max-w-5xl mx-auto h-[260px] sm:h-[340px] md:h-[380px] mt-12 sm:mt-16 flex justify-center items-center overflow-hidden">
+          {/* Neon Speed-light Streak Background Overlay */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[140px] bg-gradient-to-r from-purple-900/40 via-amber-500/30 to-red-600/40 blur-3xl pointer-events-none" />
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-amber-400/80 to-transparent shadow-[0_0_20px_#f59e0b] pointer-events-none" />
+          <div className="absolute inset-x-0 top-1/2 -translate-y-2 h-[2px] bg-gradient-to-r from-purple-500/60 via-red-500/70 to-amber-500/60 blur-[1px] pointer-events-none" />
+
+          {/* Far Left Translucent Card Silhouette */}
+          <div className="hidden lg:block absolute left-2 top-1/2 -translate-y-1/2 w-[180px] h-[280px] rounded-[24px] bg-neutral-900/40 border border-white/5 opacity-40 backdrop-blur-sm -rotate-3" />
+
+          {/* CARD 1: Red Crimson Theme (Left) */}
+          <motion.div
+            initial={{ opacity: 0, x: -50, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.42, duration: 0.6 }}
+            className="relative z-10 w-[150px] sm:w-[210px] md:w-[250px] h-[220px] sm:h-[300px] md:h-[350px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#8b001a] via-[#5c0012] to-[#120004] border border-red-500/30 shadow-2xl p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300 -mr-2 sm:-mr-4"
+          >
+            {/* Halftone / Dot pattern overlay */}
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+            
+            {/* Face/Portrait Image Tinted Overlay */}
+            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-50">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"
+                alt="Card Portrait"
+                className="w-full h-full object-cover filter contrast-150"
+              />
+            </div>
+
+            {/* Top Logo & Card Name */}
+            <div className="relative z-10 flex items-center gap-2">
+              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
+                ✦
+              </div>
+              <div>
+                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
+                <p className="text-[9px] sm:text-[10px] text-red-200 tracking-wider leading-none mt-0.5">Cards®</p>
+              </div>
+            </div>
+
+            {/* Middle Card Details */}
+            <div className="relative z-10 space-y-2 sm:space-y-3">
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-red-300 font-mono tracking-widest uppercase">CARD NO.</p>
+                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
+                  <span>8758 **** **** 0947</span>
+                  <Copy className="h-3 w-3 text-red-200 opacity-80 cursor-pointer hover:opacity-100" />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-red-300 font-mono tracking-widest uppercase">CARD HOLDER</p>
+                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
+                  MARGARET O. GUIDRY
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Expiry & CCV */}
+            <div className="relative z-10 flex items-center justify-between border-t border-red-500/20 pt-2 text-[8px] sm:text-[10px] font-mono text-red-200">
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-red-300">EXP DATE</span>
+                <span className="font-bold text-white">10/14</span>
+              </div>
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-red-300">CCV</span>
+                <span className="font-bold text-white">0**</span>
+              </div>
+              <Eye className="h-3 w-3 text-red-200 opacity-80 cursor-pointer" />
+            </div>
+          </motion.div>
+
+          {/* CARD 2: Amber Gold Theme (Center - Highlighted) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="relative z-20 w-[160px] sm:w-[220px] md:w-[260px] h-[230px] sm:h-[310px] md:h-[365px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#d97706] via-[#92400e] to-[#291003] border-2 border-amber-400/50 shadow-[0_0_40px_rgba(217,119,6,0.3)] p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300"
+          >
+            {/* Halftone / Dot pattern overlay */}
+            <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:10px_10px] pointer-events-none" />
+
+            {/* Face/Portrait Image Tinted Overlay */}
+            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-60">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
+                alt="Card Portrait"
+                className="w-full h-full object-cover filter contrast-125"
+              />
+            </div>
+
+            {/* Top Logo & Card Name */}
+            <div className="relative z-10 flex items-center gap-2">
+              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
+                ✦
+              </div>
+              <div>
+                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
+                <p className="text-[9px] sm:text-[10px] text-amber-200 tracking-wider leading-none mt-0.5">Cards®</p>
+              </div>
+            </div>
+
+            {/* Middle Card Details */}
+            <div className="relative z-10 space-y-2 sm:space-y-3">
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-amber-200 font-mono tracking-widest uppercase">CARD NO.</p>
+                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
+                  <span>3759 **** **** 9456</span>
+                  <Copy className="h-3 w-3 text-amber-200 opacity-80 cursor-pointer hover:opacity-100" />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-amber-200 font-mono tracking-widest uppercase">CARD HOLDER</p>
+                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
+                  ROBERT M. MCCRAY
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Expiry & CCV */}
+            <div className="relative z-10 flex items-center justify-between border-t border-amber-400/30 pt-2 text-[8px] sm:text-[10px] font-mono text-amber-100">
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-amber-200">EXP DATE</span>
+                <span className="font-bold text-white">12/30</span>
+              </div>
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-amber-200">CCV</span>
+                <span className="font-bold text-white">9**</span>
+              </div>
+              <Eye className="h-3 w-3 text-amber-200 opacity-80 cursor-pointer" />
+            </div>
+          </motion.div>
+
+          {/* CARD 3: Purple Magenta Theme (Right) */}
+          <motion.div
+            initial={{ opacity: 0, x: 50, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.58, duration: 0.6 }}
+            className="relative z-10 w-[150px] sm:w-[210px] md:w-[250px] h-[220px] sm:h-[300px] md:h-[350px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#581c87] via-[#3b0764] to-[#0f021e] border border-purple-500/30 shadow-2xl p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300 -ml-2 sm:-ml-4"
+          >
+            {/* Halftone / Dot pattern overlay */}
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+
+            {/* Face/Portrait Image Tinted Overlay */}
+            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-50">
+              <img
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800"
+                alt="Card Portrait"
+                className="w-full h-full object-cover filter contrast-150"
+              />
+            </div>
+
+            {/* Top Logo & Card Name */}
+            <div className="relative z-10 flex items-center gap-2">
+              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
+                ✦
+              </div>
+              <div>
+                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
+                <p className="text-[9px] sm:text-[10px] text-purple-200 tracking-wider leading-none mt-0.5">Cards®</p>
+              </div>
+            </div>
+
+            {/* Middle Card Details */}
+            <div className="relative z-10 space-y-2 sm:space-y-3">
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-purple-300 font-mono tracking-widest uppercase">CARD NO.</p>
+                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
+                  <span>9270 **** **** 1554</span>
+                  <Copy className="h-3 w-3 text-purple-200 opacity-80 cursor-pointer hover:opacity-100" />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[8px] sm:text-[9px] text-purple-300 font-mono tracking-widest uppercase">CARD HOLDER</p>
+                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
+                  JANICE W. SEYMOUR
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Expiry & CCV */}
+            <div className="relative z-10 flex items-center justify-between border-t border-purple-500/20 pt-2 text-[8px] sm:text-[10px] font-mono text-purple-200">
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-purple-300">EXP DATE</span>
+                <span className="font-bold text-white">07/06</span>
+              </div>
+              <div>
+                <span className="block text-[7px] sm:text-[8px] text-purple-300">CCV</span>
+                <span className="font-bold text-white">2**</span>
+              </div>
+              <Eye className="h-3 w-3 text-purple-200 opacity-80 cursor-pointer" />
+            </div>
+          </motion.div>
+
+          {/* Far Right Translucent Card Silhouette */}
+          <div className="hidden lg:block absolute right-2 top-1/2 -translate-y-1/2 w-[180px] h-[280px] rounded-[24px] bg-neutral-900/40 border border-white/5 opacity-40 backdrop-blur-sm rotate-3" />
+        </div>
       </div>
 
       {/* Search & Filter Controls Bar */}

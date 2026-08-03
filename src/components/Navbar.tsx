@@ -74,8 +74,13 @@ export default function Navbar({
             }}
             className="group flex items-center gap-2.5 sm:gap-3 pr-2 cursor-pointer shrink-0"
           >
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white text-black shadow-md group-hover:scale-105 group-hover:bg-[#FF5A1F] transition-all">
-              <span className="font-syne font-black text-lg text-black leading-none tracking-tight">N</span>
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full overflow-hidden transition-transform group-hover:scale-105">
+              <img
+                src="/src/assets/images/regenerated_image_1785757234835.png"
+                alt="Nihal Brand Logo"
+                referrerPolicy="no-referrer"
+                className="h-full w-full object-cover rounded-full"
+              />
             </div>
             <span className="font-syne font-bold text-base sm:text-lg tracking-wide text-white group-hover:text-[#FF5A1F] transition-colors">
               Nihal
@@ -109,42 +114,100 @@ export default function Navbar({
 
           {/* Right Action Controls matching reference image */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* WhatsApp / Chat Icon */}
-            <a
+            {/* WhatsApp / Chat Icon with Diamond Morph Animation */}
+            <motion.a
               href="https://wa.me/14158903211"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white text-black hover:bg-[#25D366] hover:text-white transition-all shadow-md group"
+              className="relative hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center cursor-pointer select-none"
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
               title="Chat on WhatsApp"
             >
-              <WhatsappIcon className="h-4 w-4 text-black group-hover:text-white transition-colors" />
-            </a>
+              <motion.div
+                variants={{
+                  initial: { rotate: 0, borderRadius: "14px", scale: 1 },
+                  hover: { rotate: 45, borderRadius: "12px", scale: 1.05 },
+                  tap: { scale: 0.92 }
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                className="absolute inset-0 bg-white shadow-md shadow-black/30"
+              />
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: { rotate: -45 }
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                className="relative z-10 text-black flex items-center justify-center"
+              >
+                <WhatsappIcon className="h-4 w-4 text-black" />
+              </motion.div>
+            </motion.a>
 
-            {/* Instagram Squircle Icon */}
-            <a
+            {/* Instagram Squircle Icon with Diamond Morph Animation */}
+            <motion.a
               href={PERSONAL_INFO.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-white text-black hover:bg-[#FF5A1F] hover:text-black transition-all shadow-md"
+              className="relative hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center cursor-pointer select-none"
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
               title="Instagram"
             >
-              <Instagram className="h-4 w-4" />
-            </a>
+              <motion.div
+                variants={{
+                  initial: { rotate: 0, borderRadius: "14px", scale: 1 },
+                  hover: { rotate: 45, borderRadius: "12px", scale: 1.05 },
+                  tap: { scale: 0.92 }
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                className="absolute inset-0 bg-white shadow-md shadow-black/30"
+              />
+              <motion.div
+                variants={{
+                  initial: { rotate: 0 },
+                  hover: { rotate: -45 }
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                className="relative z-10 text-black flex items-center justify-center"
+              >
+                <Instagram className="h-4 w-4 stroke-[2.2]" />
+              </motion.div>
+            </motion.a>
 
-            {/* Github Pill Button with Arrow Badge */}
-            <a
+            {/* Github Pill Button matching video design and smooth arrow animation */}
+            <motion.a
               href={PERSONAL_INFO.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 sm:gap-2.5 rounded-full bg-black border border-white/20 pl-3.5 pr-1 py-1 hover:border-[#FF5A1F] transition-all shadow-lg"
+              className="relative flex items-center gap-2.5 sm:gap-3 rounded-full bg-black border border-white/20 pl-4 pr-1 py-1 cursor-pointer shadow-lg overflow-hidden"
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              variants={{
+                initial: { scale: 1, borderColor: "rgba(255, 255, 255, 0.2)" },
+                hover: { scale: 1.03, borderColor: "rgba(255, 255, 255, 0.45)" },
+                tap: { scale: 0.96 }
+              }}
+              transition={{ type: 'spring', stiffness: 380, damping: 22 }}
             >
-              <span className="font-syne text-xs sm:text-sm font-bold text-white group-hover:text-[#FF5A1F] transition-colors">
+              <span className="font-sans text-xs sm:text-sm font-semibold text-white tracking-wide pl-0.5">
                 Github
               </span>
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white text-black group-hover:bg-[#FF5A1F] transition-colors">
+              <motion.div
+                variants={{
+                  initial: { x: 0, rotate: 0 },
+                  hover: { x: 2, rotate: 45 }
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white text-black shadow-sm"
+              >
                 <ArrowUpRight className="h-4 w-4 stroke-[2.5]" />
-              </div>
-            </a>
+              </motion.div>
+            </motion.a>
 
             {/* Mobile Drawer Toggle */}
             <button

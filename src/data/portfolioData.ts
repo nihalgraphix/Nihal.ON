@@ -34,6 +34,7 @@ export const PERSONAL_INFO = {
   dribbble: "https://dribbble.com",
   behance: "https://behance.com",
   calendly: "https://calendly.com",
+  blogUrl: "https://medium.com",
 };
 
 export const BRANDS = [

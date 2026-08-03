@@ -103,10 +103,10 @@ export default function Hero({ onOpenResumeModal }: HeroProps) {
               {/* Subject image blending seamlessly into orange canvas */}
               <div className="relative w-full h-full flex items-end justify-center">
                 <img
-                  src="/src/assets/images/hero_hooded_person_1785549162352.jpg"
+                  src="/src/assets/images/regenerated_image_1785750001960.png"
                   alt="AI Sprint Leader"
                   referrerPolicy="no-referrer"
-                  className="h-full w-full object-cover object-top rounded-3xl filter brightness-105 contrast-110 pointer-events-auto"
+                  className="h-full w-full object-cover object-top rounded-3xl filter brightness-105 contrast-105 drop-shadow-2xl pointer-events-auto"
                 />
                 {/* Smooth bottom transition into client logo bar */}
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#C83600] to-transparent pointer-events-none" />

@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Instagram, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { Menu, X, Instagram, ArrowUpRight } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+
+const WhatsappIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99 0-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.285-.143-1.689-.834-1.95-.929-.262-.095-.453-.143-.645.143-.191.286-.742.929-.91 1.12-.168.19-.335.214-.62.071-.285-.143-1.204-.444-2.293-1.415-.847-.756-1.419-1.689-1.585-1.975-.167-.286-.018-.441.125-.583.129-.128.286-.334.429-.501.143-.167.19-.286.286-.477.095-.191.048-.358-.024-.501-.071-.143-.645-1.551-.883-2.124-.232-.558-.468-.482-.644-.491l-.55-.008c-.191 0-.501.071-.763.358-.262.286-1.002.978-1.002 2.384 0 1.407 1.026 2.766 1.169 2.957.143.191 2.019 3.083 4.891 4.322.683.294 1.217.471 1.633.603.686.218 1.311.187 1.805.113.551-.083 1.689-.691 1.928-1.359.238-.668.238-1.24.167-1.359-.071-.12-.262-.191-.548-.334z" />
+  </svg>
+);
 
 interface NavbarProps {
   activeSection: string;
@@ -34,6 +40,7 @@ export default function Navbar({
     { id: 'skills', label: 'Skills' },
     { id: 'projects', label: 'Works' },
     { id: 'services', label: 'Services' },
+    { id: 'blog', label: 'Blog' },
     { id: 'gallery', label: 'Gallery' },
     { id: 'contact', label: 'Contact' },
   ];
@@ -50,7 +57,7 @@ export default function Navbar({
   return (
     <>
       {/* Floating Navbar Container */}
-      <header className="fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl transition-all duration-300">
+      <header className="fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-[1400px] transition-all duration-300">
         <div
           className={`mx-auto flex items-center justify-between px-3.5 py-2.5 sm:px-6 sm:py-3 rounded-full border transition-all duration-300 ${
             scrolled
@@ -65,7 +72,7 @@ export default function Navbar({
               e.preventDefault();
               scrollToSection('home');
             }}
-            className="group flex items-center gap-2.5 sm:gap-3 pr-2 cursor-pointer"
+            className="group flex items-center gap-2.5 sm:gap-3 pr-2 cursor-pointer shrink-0"
           >
             <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white text-black shadow-md group-hover:scale-105 group-hover:bg-[#FF5A1F] transition-all">
               <span className="font-syne font-black text-lg text-black leading-none tracking-tight">N</span>
@@ -76,12 +83,12 @@ export default function Navbar({
           </a>
 
           {/* Center Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 sm:gap-2">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollToSection(link.id)}
-                className={`relative px-3.5 py-1.5 text-xs xl:text-sm font-semibold transition-colors rounded-full cursor-pointer ${
+                className={`relative px-3 py-1.5 xl:px-4 xl:py-2 text-xs xl:text-sm font-semibold transition-colors rounded-full cursor-pointer whitespace-nowrap ${
                   activeSection === link.id
                     ? 'text-black font-bold'
                     : 'text-neutral-300 hover:text-white'
@@ -101,16 +108,16 @@ export default function Navbar({
           </nav>
 
           {/* Right Action Controls matching reference image */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* WhatsApp / Chat Icon */}
             <a
               href="https://wa.me/14158903211"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white text-black hover:bg-[#FF5A1F] hover:text-black transition-all shadow-md group"
-              title="Chat / WhatsApp"
+              className="hidden sm:flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white text-black hover:bg-[#25D366] hover:text-white transition-all shadow-md group"
+              title="Chat on WhatsApp"
             >
-              <MessageCircle className="h-4 w-4 text-black" />
+              <WhatsappIcon className="h-4 w-4 text-black group-hover:text-white transition-colors" />
             </a>
 
             {/* Instagram Squircle Icon */}
@@ -185,9 +192,9 @@ export default function Navbar({
                   href="https://wa.me/14158903211"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-[#FF5A1F] hover:text-black transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-[#25D366] hover:text-white transition-colors"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsappIcon className="h-4 w-4" />
                   <span>WhatsApp</span>
                 </a>
                 <a

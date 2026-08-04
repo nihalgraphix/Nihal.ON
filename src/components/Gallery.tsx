@@ -222,6 +222,7 @@ export default function Gallery({ onOpenGalleryPage }: GalleryProps = {}) {
               onClick={() => {
                 if (onOpenGalleryPage) {
                   onOpenGalleryPage();
+                  window.scrollTo({ top: 0, behavior: 'instant' });
                 } else {
                   setShowAllGrid(!showAllGrid);
                 }

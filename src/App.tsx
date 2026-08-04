@@ -249,7 +249,12 @@ export default function App() {
           viewport={{ once: true, amount: 0.1, margin: "-40px" }}
           variants={sectionVariants}
         >
-          <Gallery onOpenGalleryPage={() => setCurrentView('gallery')} />
+          <Gallery
+            onOpenGalleryPage={() => {
+              setCurrentView('gallery');
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
+          />
         </motion.div>
 
         <motion.div

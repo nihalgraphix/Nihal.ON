@@ -25,8 +25,8 @@ export default function Blog() {
   return (
     <section id="blog" className="relative py-20 bg-[#060606] overflow-hidden">
       {/* Background Subtle Gradient Glows */}
-      <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#FF5A1F]/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#FF5A1F]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#FF5A1F]/10 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#FF5A1F]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -197,7 +197,7 @@ export default function Blog() {
                 </div>
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-[#FF5A1F] hover:text-black transition-colors"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-[#FF5A1F] hover:text-black transition-colors cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -229,7 +229,7 @@ export default function Blog() {
               <div className="pt-6 border-t border-white/10 flex justify-end">
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="rounded-full bg-[#FF5A1F] px-6 py-2.5 text-xs font-bold text-black hover:bg-orange-500 transition-colors"
+                  className="rounded-full bg-[#FF5A1F] px-6 py-2.5 text-xs font-bold text-black hover:bg-orange-500 transition-colors cursor-pointer"
                 >
                   Close Article
                 </button>

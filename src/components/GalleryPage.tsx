@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, X, Maximize2, Download, Heart, Search, Filter, SlidersHorizontal, Image as ImageIcon, ArrowDown, Sparkles, Copy, Eye, ArrowRight } from 'lucide-react';
+import { ArrowLeft, X, Maximize2, Download, Heart, Search, Filter, SlidersHorizontal, Image as ImageIcon, ArrowDown, Sparkles, Copy, Eye, ArrowRight, Home, Bell, ShoppingCart } from 'lucide-react';
 import Logo from './Logo';
 
 interface GalleryPageProps {
@@ -275,300 +275,374 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
     return counts;
   }, []);
 
+  // Ensure landing directly at the top hero section of gallery web on open
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const heroEl = document.getElementById('gallery-hero-section');
+    if (heroEl) {
+      heroEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#060606] text-white py-3 sm:py-5 px-3 sm:px-6 lg:px-10 selection:bg-[#FF5A1F] selection:text-black font-sans antialiased w-full">
       {/* Top Header Bar */}
-      <header className="flex items-center justify-between py-3 px-4 sm:px-6 mb-6 w-full max-w-7xl mx-auto">
+      <header className="flex flex-col md:flex-row items-center justify-between gap-4 py-4 sm:py-6 px-4 sm:px-8 lg:px-12 xl:px-16 w-full max-w-full mx-auto mb-6 sm:mb-8">
         {/* Left Brand */}
         <div
           onClick={onBack}
-          className="cursor-pointer group flex items-center gap-2.5"
+          className="cursor-pointer group flex items-center gap-3"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg overflow-hidden">
-            <Logo className="h-full w-full" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF5A1F] text-black font-syne font-extrabold text-base shadow-md shadow-[#FF5A1F]/20 group-hover:scale-105 transition-all">
+            N
           </div>
-          <span className="font-syne font-bold text-lg text-white tracking-tight">
-            Nihal Frames
+          <span className="font-syne font-extrabold text-2xl text-white tracking-tight">
+            nihal frames.
           </span>
         </div>
 
-        {/* Right Back Button */}
-        <button
-          onClick={onBack}
-          className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg hover:bg-white hover:text-black hover:border-white transition-all cursor-pointer backdrop-blur-md"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back</span>
-        </button>
-      </header>
+        {/* Center Minimal Floating Nav Bar (Matches Image Design Exactly) */}
+        <div className="flex items-center gap-3.5 sm:gap-4">
+          {/* Main Floating Pill Menu */}
+          <div className="flex items-center gap-3 sm:gap-6 p-1.5 sm:p-2 px-3 sm:px-5 rounded-full bg-white text-neutral-900 shadow-xl shadow-black/40 border border-white/20">
+            {/* Active "Home" Pill Badge */}
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-black text-white font-sans font-semibold text-xs sm:text-sm shadow-md hover:bg-neutral-800 transition-all cursor-pointer"
+            >
+              <Home className="h-4 w-4 fill-current text-white" />
+              <span>Home</span>
+            </button>
 
-      {/* Main Dark Card Hero Showcase */}
-      <div className="relative w-full max-w-7xl mx-auto rounded-[32px] sm:rounded-[40px] bg-[#0c0c10] text-white pt-10 sm:pt-14 pb-12 sm:pb-16 px-4 sm:px-8 shadow-2xl overflow-hidden border border-white/10 mb-8 text-center">
-        {/* Subtle Ambient Top Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-gradient-to-b from-purple-900/15 via-red-900/10 to-transparent blur-[90px] pointer-events-none rounded-full" />
+            {/* Search Icon */}
+            <button
+              onClick={() => {
+                document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="p-1.5 sm:p-2 rounded-full text-neutral-600 hover:text-black hover:bg-neutral-100 transition-all cursor-pointer"
+              title="Search"
+            >
+              <Search className="h-4 sm:h-5 w-4 sm:w-5 stroke-[2]" />
+            </button>
 
-        {/* Top Notification Badge Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181820]/90 border border-white/10 text-xs text-neutral-300 shadow-inner backdrop-blur-md cursor-pointer hover:border-purple-500/40 transition-all"
-        >
-          <span>Try our personal cards now!</span>
-          <span className="text-[#a855f7] font-medium flex items-center gap-0.5">
-            Learn more <ArrowRight className="h-3 w-3" />
-          </span>
-        </motion.div>
+            {/* Heart / Wishlist Icon */}
+            <button
+              onClick={() => {
+                setSelectedCategory('All');
+                document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="p-1.5 sm:p-2 rounded-full text-neutral-600 hover:text-black hover:bg-neutral-100 transition-all cursor-pointer"
+              title="Liked frames"
+            >
+              <Heart className="h-4 sm:h-5 w-4 sm:w-5 stroke-[2]" />
+            </button>
 
-        {/* Main Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.18 }}
-          className="font-sans text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-tight"
-        >
-          Create your <span className="font-semibold">FaceCards</span>
-        </motion.h1>
+            {/* Notification Bell Icon */}
+            <button
+              className="p-1.5 sm:p-2 rounded-full text-neutral-600 hover:text-black hover:bg-neutral-100 transition-all cursor-pointer"
+              title="Notifications"
+            >
+              <Bell className="h-4 sm:h-5 w-4 sm:w-5 stroke-[2]" />
+            </button>
+          </div>
 
-        {/* Faded Secondary Headline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.24 }}
-          className="font-sans text-2xl sm:text-4xl font-normal text-neutral-500 tracking-tight mt-1"
-        >
-          Express Yourself with this Cards
-        </motion.h2>
-
-        {/* Description Text */}
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-4 text-xs sm:text-sm text-neutral-400 max-w-lg mx-auto leading-relaxed font-sans"
-        >
-          With our cutting-edge FaceCards feature, you can now craft your own
-          personalized bank card based on your unique facial features.
-        </motion.p>
-
-        {/* Center Pill CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.36 }}
-          className="mt-6 flex justify-center"
-        >
+          {/* Standalone Circular Cart Button with Badge */}
           <button
             onClick={() => {
               document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-black font-sans font-semibold text-xs sm:text-sm shadow-xl hover:bg-neutral-200 transition-all cursor-pointer hover:scale-105 group"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-black shadow-xl shadow-black/40 border border-white/20 flex items-center justify-center relative cursor-pointer hover:scale-105 active:scale-95 transition-all group"
+            title="Cart (3 items)"
           >
-            <span>Start today!</span>
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-white text-xs">
-              →
-            </div>
+            <ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5 text-neutral-900" />
+            <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-[#ef4444] text-white text-[10px] font-extrabold flex items-center justify-center border-2 border-white shadow-sm">
+              3
+            </span>
           </button>
+        </div>
+
+        {/* Right CTA Button & Return Back */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="px-6 py-2.5 rounded-full bg-[#FF5A1F] text-black font-sans font-extrabold text-xs sm:text-sm hover:bg-[#ff723f] transition-all shadow-md shadow-[#FF5A1F]/20 cursor-pointer hover:scale-105 active:scale-95"
+          >
+            Sign In
+          </button>
+          <button
+            onClick={onBack}
+            className="p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10 cursor-pointer"
+            title="Return Home"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        </div>
+      </header>
+
+      {/* Main Dark Card Hero Showcase - nihal frames Staircase Grid */}
+      <div id="gallery-hero-section" className="relative w-full max-w-full mx-auto rounded-[28px] sm:rounded-[36px] lg:rounded-[40px] bg-[#09090c] text-white p-5 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center shadow-2xl overflow-hidden border border-white/10 mb-8 min-h-[780px] lg:h-[780px]">
+        {/* Subtle Ambient Top-Left Orange Glow */}
+        <div className="absolute top-0 left-0 w-[500px] h-[350px] bg-gradient-to-br from-[#FF5A1F]/12 via-amber-500/5 to-transparent blur-[120px] pointer-events-none rounded-full" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-center relative z-10 my-auto">
+          {/* Left Hero Text Content Area */}
+          <div className="lg:col-span-5 pt-2 lg:pt-0 space-y-4 sm:space-y-6">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="font-syne text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.06] tracking-tight"
+            >
+              No More Boring <br />
+              <span className="text-white">Stock Images</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-xs sm:text-sm text-neutral-400 font-sans leading-relaxed max-w-md"
+            >
+              Generate high-quality images with prompt assistance, custom styles, and instant high-res visual output.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="pt-1"
+            >
+              <button
+                onClick={() => {
+                  document.getElementById('gallery-grid-start')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF5A1F] text-black font-sans font-extrabold text-xs sm:text-sm hover:bg-[#ff723f] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-[#FF5A1F]/25 cursor-pointer"
+              >
+                <span>Join the Beta Version</span>
+              </button>
+            </motion.div>
+          </div>
+
+          {/* Right Cascading Staircase Bento Grid */}
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 lg:gap-3.5 items-end pt-2 lg:pt-0">
+            {/* Column 1 (Leftmost - Lowest step) */}
+            <div className="flex flex-col gap-2.5 sm:gap-3 justify-end pt-12 sm:pt-16 lg:pt-20">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="h-[140px] sm:h-[180px] lg:h-[210px] xl:h-[240px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[0])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=800"
+                  alt="Flower"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.div>
+            </div>
+
+            {/* Column 2 */}
+            <div className="flex flex-col gap-2.5 sm:gap-3 justify-end pt-8 sm:pt-12 lg:pt-14">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className="h-[120px] sm:h-[150px] lg:h-[180px] xl:h-[210px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[1])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800"
+                  alt="Cat on Taxi Hood"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="h-[80px] sm:h-[100px] lg:h-[120px] xl:h-[140px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800"
+                  alt="Sage Mint Palette"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+            </div>
+
+            {/* Column 3 */}
+            <div className="flex flex-col gap-2.5 sm:gap-3 justify-end pt-5 sm:pt-8 lg:pt-10">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="h-[110px] sm:h-[140px] lg:h-[170px] xl:h-[195px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[2])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=800"
+                  alt="Minimal Plant"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="h-[100px] sm:h-[130px] lg:h-[160px] xl:h-[185px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[3])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"
+                  alt="Golden Sunset Portrait"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+            </div>
+
+            {/* Column 4 */}
+            <div className="flex flex-col gap-2.5 sm:gap-3 justify-end pt-2 sm:pt-4 lg:pt-5">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.35 }}
+                className="h-[100px] sm:h-[125px] lg:h-[150px] xl:h-[175px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&q=80&w=800"
+                  alt="Cat in Red Hoodie"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="h-[110px] sm:h-[135px] lg:h-[160px] xl:h-[185px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[4])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&q=80&w=800"
+                  alt="Green Citrus Leaves in Blue Sky"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.45 }}
+                className="h-[75px] sm:h-[90px] lg:h-[110px] xl:h-[130px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+                onClick={() => setSelectedPhoto(GALLERY_PHOTOS[5])}
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1565008447742-97f6f38c985c?auto=format&fit=crop&q=80&w=800"
+                  alt="Ancient Stone Canyon Ruins"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+            </div>
+
+            {/* Column 5 (Highest - Reaches Top Right) */}
+            <div className="flex flex-col gap-2.5 sm:gap-3 justify-end pt-0">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="h-[115px] sm:h-[145px] lg:h-[175px] xl:h-[200px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800"
+                  alt="Modern Chair with Oranges"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.55 }}
+                className="h-[110px] sm:h-[135px] lg:h-[160px] xl:h-[185px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=800"
+                  alt="Iridescent 3D Sculpture"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="h-[75px] sm:h-[90px] lg:h-[110px] xl:h-[130px] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 group relative shadow-lg cursor-pointer"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800"
+                  alt="Blue Vintage Car on Desert Road"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Our Trusted Partners Section */}
+      <div className="w-full max-w-full mx-auto my-10 sm:my-14 px-4 sm:px-8 lg:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="space-y-1.5 mb-6 text-left"
+        >
+          <h2 className="font-syne text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+            Our Trusted Partners
+          </h2>
+          <p className="text-xs sm:text-sm md:text-base text-neutral-400 font-sans max-w-2xl">
+            We collaborate with industry leaders, creators & studios, combining cutting-edge technology and seamless experiences.
+          </p>
         </motion.div>
 
-        {/* 3D FaceCards Showcase Deck with Speed-light Streaks Background */}
-        <div className="relative w-full max-w-5xl mx-auto h-[260px] sm:h-[340px] md:h-[380px] mt-12 sm:mt-16 flex justify-center items-center overflow-hidden">
-          {/* Neon Speed-light Streak Background Overlay */}
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[140px] bg-gradient-to-r from-purple-900/40 via-amber-500/30 to-red-600/40 blur-3xl pointer-events-none" />
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-amber-400/80 to-transparent shadow-[0_0_20px_#f59e0b] pointer-events-none" />
-          <div className="absolute inset-x-0 top-1/2 -translate-y-2 h-[2px] bg-gradient-to-r from-purple-500/60 via-red-500/70 to-amber-500/60 blur-[1px] pointer-events-none" />
-
-          {/* Far Left Translucent Card Silhouette */}
-          <div className="hidden lg:block absolute left-2 top-1/2 -translate-y-1/2 w-[180px] h-[280px] rounded-[24px] bg-neutral-900/40 border border-white/5 opacity-40 backdrop-blur-sm -rotate-3" />
-
-          {/* CARD 1: Red Crimson Theme (Left) */}
-          <motion.div
-            initial={{ opacity: 0, x: -50, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.42, duration: 0.6 }}
-            className="relative z-10 w-[150px] sm:w-[210px] md:w-[250px] h-[220px] sm:h-[300px] md:h-[350px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#8b001a] via-[#5c0012] to-[#120004] border border-red-500/30 shadow-2xl p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300 -mr-2 sm:-mr-4"
-          >
-            {/* Halftone / Dot pattern overlay */}
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
-            
-            {/* Face/Portrait Image Tinted Overlay */}
-            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-50">
-              <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"
-                alt="Card Portrait"
-                className="w-full h-full object-cover filter contrast-150"
-              />
-            </div>
-
-            {/* Top Logo & Card Name */}
-            <div className="relative z-10 flex items-center gap-2">
-              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
-                ✦
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
-                <p className="text-[9px] sm:text-[10px] text-red-200 tracking-wider leading-none mt-0.5">Cards®</p>
-              </div>
-            </div>
-
-            {/* Middle Card Details */}
-            <div className="relative z-10 space-y-2 sm:space-y-3">
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-red-300 font-mono tracking-widest uppercase">CARD NO.</p>
-                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
-                  <span>8758 **** **** 0947</span>
-                  <Copy className="h-3 w-3 text-red-200 opacity-80 cursor-pointer hover:opacity-100" />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-red-300 font-mono tracking-widest uppercase">CARD HOLDER</p>
-                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
-                  MARGARET O. GUIDRY
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Expiry & CCV */}
-            <div className="relative z-10 flex items-center justify-between border-t border-red-500/20 pt-2 text-[8px] sm:text-[10px] font-mono text-red-200">
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-red-300">EXP DATE</span>
-                <span className="font-bold text-white">10/14</span>
-              </div>
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-red-300">CCV</span>
-                <span className="font-bold text-white">0**</span>
-              </div>
-              <Eye className="h-3 w-3 text-red-200 opacity-80 cursor-pointer" />
-            </div>
-          </motion.div>
-
-          {/* CARD 2: Amber Gold Theme (Center - Highlighted) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="relative z-20 w-[160px] sm:w-[220px] md:w-[260px] h-[230px] sm:h-[310px] md:h-[365px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#d97706] via-[#92400e] to-[#291003] border-2 border-amber-400/50 shadow-[0_0_40px_rgba(217,119,6,0.3)] p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300"
-          >
-            {/* Halftone / Dot pattern overlay */}
-            <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:10px_10px] pointer-events-none" />
-
-            {/* Face/Portrait Image Tinted Overlay */}
-            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-60">
-              <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
-                alt="Card Portrait"
-                className="w-full h-full object-cover filter contrast-125"
-              />
-            </div>
-
-            {/* Top Logo & Card Name */}
-            <div className="relative z-10 flex items-center gap-2">
-              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
-                ✦
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
-                <p className="text-[9px] sm:text-[10px] text-amber-200 tracking-wider leading-none mt-0.5">Cards®</p>
-              </div>
-            </div>
-
-            {/* Middle Card Details */}
-            <div className="relative z-10 space-y-2 sm:space-y-3">
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-amber-200 font-mono tracking-widest uppercase">CARD NO.</p>
-                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
-                  <span>3759 **** **** 9456</span>
-                  <Copy className="h-3 w-3 text-amber-200 opacity-80 cursor-pointer hover:opacity-100" />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-amber-200 font-mono tracking-widest uppercase">CARD HOLDER</p>
-                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
-                  ROBERT M. MCCRAY
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Expiry & CCV */}
-            <div className="relative z-10 flex items-center justify-between border-t border-amber-400/30 pt-2 text-[8px] sm:text-[10px] font-mono text-amber-100">
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-amber-200">EXP DATE</span>
-                <span className="font-bold text-white">12/30</span>
-              </div>
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-amber-200">CCV</span>
-                <span className="font-bold text-white">9**</span>
-              </div>
-              <Eye className="h-3 w-3 text-amber-200 opacity-80 cursor-pointer" />
-            </div>
-          </motion.div>
-
-          {/* CARD 3: Purple Magenta Theme (Right) */}
-          <motion.div
-            initial={{ opacity: 0, x: 50, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.58, duration: 0.6 }}
-            className="relative z-10 w-[150px] sm:w-[210px] md:w-[250px] h-[220px] sm:h-[300px] md:h-[350px] rounded-[22px] sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-[#581c87] via-[#3b0764] to-[#0f021e] border border-purple-500/30 shadow-2xl p-3 sm:p-5 flex flex-col justify-between text-left group hover:scale-105 transition-transform duration-300 -ml-2 sm:-ml-4"
-          >
-            {/* Halftone / Dot pattern overlay */}
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
-
-            {/* Face/Portrait Image Tinted Overlay */}
-            <div className="absolute inset-0 overflow-hidden mix-blend-overlay opacity-50">
-              <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800"
-                alt="Card Portrait"
-                className="w-full h-full object-cover filter contrast-150"
-              />
-            </div>
-
-            {/* Top Logo & Card Name */}
-            <div className="relative z-10 flex items-center gap-2">
-              <div className="h-5 w-5 bg-white text-black rounded p-0.5 flex items-center justify-center font-bold text-[10px]">
-                ✦
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-xs font-bold text-white tracking-wider leading-none">Personal</p>
-                <p className="text-[9px] sm:text-[10px] text-purple-200 tracking-wider leading-none mt-0.5">Cards®</p>
-              </div>
-            </div>
-
-            {/* Middle Card Details */}
-            <div className="relative z-10 space-y-2 sm:space-y-3">
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-purple-300 font-mono tracking-widest uppercase">CARD NO.</p>
-                <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono font-bold text-white tracking-widest mt-0.5">
-                  <span>9270 **** **** 1554</span>
-                  <Copy className="h-3 w-3 text-purple-200 opacity-80 cursor-pointer hover:opacity-100" />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[8px] sm:text-[9px] text-purple-300 font-mono tracking-widest uppercase">CARD HOLDER</p>
-                <p className="text-[10px] sm:text-xs font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
-                  JANICE W. SEYMOUR
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Expiry & CCV */}
-            <div className="relative z-10 flex items-center justify-between border-t border-purple-500/20 pt-2 text-[8px] sm:text-[10px] font-mono text-purple-200">
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-purple-300">EXP DATE</span>
-                <span className="font-bold text-white">07/06</span>
-              </div>
-              <div>
-                <span className="block text-[7px] sm:text-[8px] text-purple-300">CCV</span>
-                <span className="font-bold text-white">2**</span>
-              </div>
-              <Eye className="h-3 w-3 text-purple-200 opacity-80 cursor-pointer" />
-            </div>
-          </motion.div>
-
-          {/* Far Right Translucent Card Silhouette */}
-          <div className="hidden lg:block absolute right-2 top-1/2 -translate-y-1/2 w-[180px] h-[280px] rounded-[24px] bg-neutral-900/40 border border-white/5 opacity-40 backdrop-blur-sm rotate-3" />
+        {/* Partner Logos Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 items-center">
+          {[
+            { name: 'OpenAI', badge: 'AI Models' },
+            { name: 'Midjourney', badge: 'Generative' },
+            { name: 'Stability AI', badge: 'Diffusion' },
+            { name: 'Runway', badge: 'Video AI' },
+            { name: 'Adobe', badge: 'Creative' },
+            { name: 'Figma', badge: 'UI & Design' },
+          ].map((brand, idx) => (
+            <motion.div
+              key={brand.name}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.05, duration: 0.4 }}
+              className="h-16 rounded-2xl bg-[#0e0e13] border border-white/10 flex flex-col items-center justify-center p-3 hover:border-[#FF5A1F]/50 hover:bg-[#14141c] transition-all cursor-pointer group shadow-md"
+            >
+              <span className="font-syne font-bold text-sm sm:text-base text-neutral-300 group-hover:text-white transition-colors">
+                {brand.name}
+              </span>
+              <span className="text-[9px] font-mono text-neutral-500 group-hover:text-[#FF5A1F] transition-colors">
+                {brand.badge}
+              </span>
+            </motion.div>
+          ))}
         </div>
       </div>
 

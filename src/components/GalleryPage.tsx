@@ -2,8 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeft, X, Maximize2, Download, Heart, Search, Filter, SlidersHorizontal, Image as ImageIcon,
-  ArrowDown, Sparkles, Copy, Eye, ArrowRight, Home, Bell, ShoppingCart, Check, Plus, Minus,
-  Trash2, CheckCircle2, ShoppingBag, Layers, AlertCircle, Zap, ShieldCheck
+  ArrowDown, Sparkles, Copy, Eye, ArrowRight, Home, Bell, Check, Plus, Minus,
+  Trash2, CheckCircle2, Layers, AlertCircle, Zap, ShieldCheck, User, LogIn, LogOut, Mail, MessageSquare, Send
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -25,14 +25,11 @@ interface PhotoItem {
   tags: string[];
 }
 
-interface CartItem {
-  id: string;
-  title: string;
-  location: string;
-  price: number;
-  image: string;
-  licenseType: string;
-  quantity: number;
+interface UserProfile {
+  name: string;
+  email: string;
+  avatar?: string;
+  plan?: string;
 }
 
 interface NotificationItem {
@@ -265,44 +262,88 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
     }
   }, [likedPhotos]);
 
+  // User Authentication State
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
+    try {
+      const saved = localStorage.getItem('nihal_frames_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [signInEmail, setSignInEmail] = useState('');
+  const [signInPassword, setSignInPassword] = useState('');
+  const [signInToast, setSignInToast] = useState<string | null>(null);
+
+  // Inquiry State
+  const [isInquireOpen, setIsInquireOpen] = useState(false);
+  const [inquireFrame, setInquireFrame] = useState<PhotoItem | null>(null);
+  const [inquireName, setInquireName] = useState('');
+  const [inquireEmail, setInquireEmail] = useState('');
+  const [inquireType, setInquireType] = useState('8K High-Res Print');
+  const [inquireMessage, setInquireMessage] = useState('');
+  const [inquireSuccess, setInquireSuccess] = useState(false);
+
   // Drawers & Modals state for floating navbar
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [addedToast, setAddedToast] = useState<string | null>(null);
 
-  // Cart items state
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 'photo-arch-6',
-      title: 'Cyberpunk Visor - 4K Frame',
-      location: 'Cyberpunk Series',
-      price: 29,
-      image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=400',
-      licenseType: 'Personal 4K License',
-      quantity: 1,
-    },
-    {
-      id: 'photo-2',
-      title: 'Desert Sand Dune - High Res Print',
-      location: 'Rub al Khali',
-      price: 49,
-      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400',
-      licenseType: 'Commercial Rights Frame',
-      quantity: 1,
-    },
-    {
-      id: 'photo-1',
-      title: 'AlUla Rock Monolith - Fine Art',
-      location: 'AlUla Valley',
-      price: 39,
-      image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=400',
-      licenseType: 'Ultra-Res Canvas Print',
-      quantity: 1,
-    },
-  ]);
+  // User Auth Actions
+  const handleSignIn = (emailInput?: string, nameInput?: string) => {
+    const emailToUse = emailInput || signInEmail || 'creator@nihal.frames';
+    const nameToUse = nameInput || (emailToUse.split('@')[0]
+      ? emailToUse.split('@')[0].charAt(0).toUpperCase() + emailToUse.split('@')[0].slice(1)
+      : 'VIP Collector');
+
+    const userObj: UserProfile = {
+      name: nameToUse,
+      email: emailToUse,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+      plan: 'Pro VIP Member'
+    };
+
+    setCurrentUser(userObj);
+    try {
+      localStorage.setItem('nihal_frames_user', JSON.stringify(userObj));
+    } catch (e) {
+      console.error('Error saving user profile', e);
+    }
+    setIsSignInOpen(false);
+    setSignInToast(`Welcome back, ${userObj.name}!`);
+    setTimeout(() => setSignInToast(null), 3500);
+  };
+
+  const handleSignOut = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem('nihal_frames_user');
+    } catch (e) {
+      console.error(e);
+    }
+    setIsSignInOpen(false);
+    setSignInToast('Signed out successfully.');
+    setTimeout(() => setSignInToast(null), 3500);
+  };
+
+  // Inquiry Actions
+  const handleOpenInquiry = (frame?: PhotoItem) => {
+    if (frame) setInquireFrame(frame);
+    else setInquireFrame(null);
+    if (currentUser) {
+      setInquireName(currentUser.name);
+      setInquireEmail(currentUser.email);
+    }
+    setIsInquireOpen(true);
+    setInquireSuccess(false);
+  };
+
+  const handleSubmitInquiry = (e: React.FormEvent) => {
+    e.preventDefault();
+    setInquireSuccess(true);
+  };
 
   // Notifications state
   const [notifications, setNotifications] = useState<NotificationItem[]>([
@@ -346,15 +387,6 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
     }
   };
 
-  // Cart Helper functions
-  const totalCartCount = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  }, [cartItems]);
-
-  const totalCartPrice = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  }, [cartItems]);
-
   const unreadNotificationsCount = useMemo(() => {
     return notifications.filter((n) => !n.read).length;
   }, [notifications]);
@@ -366,54 +398,6 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
   const likedPhotosList = useMemo(() => {
     return GALLERY_PHOTOS.filter((photo) => likedPhotos[photo.id]);
   }, [likedPhotos]);
-
-  const handleAddToCart = (photo: PhotoItem, licenseType = 'High-Res 4K License', price = 29) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === photo.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === photo.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: photo.id,
-          title: photo.title,
-          location: photo.location,
-          price: price,
-          image: photo.src,
-          licenseType: licenseType,
-          quantity: 1,
-        },
-      ];
-    });
-
-    setAddedToast(`Added "${photo.title.slice(0, 24)}..." to cart`);
-    setTimeout(() => setAddedToast(null), 3000);
-  };
-
-  const handleUpdateQuantity = (id: string, delta: number) => {
-    setCartItems((prev) =>
-      prev
-        .map((item) => {
-          if (item.id === id) {
-            const newQty = item.quantity + delta;
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean) as CartItem[]
-    );
-  };
-
-  const handleRemoveFromCart = (id: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleClearCart = () => {
-    setCartItems([]);
-  };
 
   const handleMarkAllNotificationsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
@@ -642,27 +626,19 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
             </button>
           </div>
 
-          {/* Standalone Circular Cart Button with Badge */}
+          {/* Standalone Inquire Button */}
           <button
-            onClick={() => setIsCartOpen(true)}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-black shadow-2xl shadow-black/80 border border-white/40 flex items-center justify-center relative cursor-pointer hover:scale-105 active:scale-95 transition-all group"
-            title={`Cart (${totalCartCount} items)`}
+            onClick={() => handleOpenInquiry()}
+            className="h-11 sm:h-12 px-4 sm:px-5 rounded-full bg-white text-black shadow-2xl shadow-black/80 border border-white/40 flex items-center justify-center gap-2 cursor-pointer hover:scale-105 active:scale-95 transition-all group font-sans font-bold text-sm"
+            title="Inquire about custom frames, prints, or licensing"
           >
-            <ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5 text-neutral-900 group-hover:scale-110 transition-transform" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#ef4444] text-white text-[10px] font-extrabold flex items-center justify-center border-2 border-white shadow-md">
-              {totalCartCount}
-            </span>
+            <MessageSquare className="h-4 sm:h-5 w-4 sm:w-5 text-neutral-900 group-hover:scale-110 transition-transform" />
+            <span>Inquire</span>
           </button>
         </div>
 
-        {/* Right CTA Button & Return Back */}
-        <div className="pointer-events-auto flex items-center gap-3">
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="px-6 py-2.5 rounded-full bg-[#FF5A1F] text-black font-sans font-extrabold text-xs sm:text-sm hover:bg-[#ff723f] transition-all shadow-xl shadow-[#FF5A1F]/30 cursor-pointer hover:scale-105 active:scale-95"
-          >
-            Sign In
-          </button>
+        {/* Right Action Button & Return Back */}
+        <div className="pointer-events-auto flex items-center gap-2.5">
           <button
             onClick={onBack}
             className="p-2.5 rounded-full bg-black/70 backdrop-blur-xl text-white hover:bg-white/20 transition-all border border-white/15 cursor-pointer shadow-xl"
@@ -1156,11 +1132,11 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
                       </div>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleAddToCart(photo)}
+                          onClick={() => handleOpenInquiry(photo)}
                           className="p-2 rounded-xl bg-[#FF5A1F] text-black hover:bg-orange-500 transition-colors cursor-pointer"
-                          title="Add frame to cart"
+                          title="Inquire about this frame"
                         >
-                          <ShoppingCart className="h-4 w-4" />
+                          <MessageSquare className="h-4 w-4" />
                         </button>
                         <button
                           onClick={(e) => toggleLike(photo.id, e)}
@@ -1269,120 +1245,276 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
           </motion.div>
         )}
 
-        {/* Cart Drawer / Modal */}
-        {isCartOpen && (
+        {/* Inquire Modal / Drawer */}
+        {isInquireOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsCartOpen(false)}
-            className="fixed inset-0 z-[120] flex items-center justify-end p-2 sm:p-4 bg-black/80 backdrop-blur-md"
+            onClick={() => setIsInquireOpen(false)}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
           >
             <motion.div
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 300, opacity: 0 }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md bg-[#0e0e13] border border-white/20 rounded-3xl p-6 shadow-2xl text-white relative max-h-[92vh] flex flex-col"
+              className="w-full max-w-lg bg-[#0e0e13] border border-white/20 rounded-3xl p-6 shadow-2xl text-white relative max-h-[92vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-[#FF5A1F] text-black">
-                    <ShoppingCart className="h-5 w-5" />
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2.5 rounded-xl bg-[#FF5A1F] text-black">
+                    <MessageSquare className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-syne font-bold text-lg text-white">Your Cart ({totalCartCount})</h3>
-                    <p className="text-xs text-neutral-400">High-Res License Prints & Digital Downloads</p>
+                    <h3 className="font-syne font-bold text-lg text-white">
+                      {inquireFrame ? `Inquire: ${inquireFrame.title}` : 'Inquire & Licensing Request'}
+                    </h3>
+                    <p className="text-xs text-neutral-400">Request high-res prints, 8K downloads, or commercial rights</p>
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsCartOpen(false)}
+                  onClick={() => setIsInquireOpen(false)}
                   className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto my-4 space-y-3 pr-1">
-                {checkoutSuccess ? (
-                  <div className="py-12 text-center text-white space-y-3">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
-                      <CheckCircle2 className="h-8 w-8" />
+              {inquireSuccess ? (
+                <div className="py-10 text-center text-white space-y-3">
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="h-8 w-8" />
+                  </div>
+                  <h4 className="font-syne font-extrabold text-xl text-white">Inquiry Sent!</h4>
+                  <p className="text-xs text-neutral-300 max-w-xs mx-auto leading-relaxed">
+                    Thank you for your interest. Nihal will review your inquiry and email you at <span className="text-[#FF5A1F] font-bold">{inquireEmail || 'your email'}</span> within 24 hours.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setInquireSuccess(false);
+                      setIsInquireOpen(false);
+                    }}
+                    className="px-6 py-2.5 rounded-full bg-[#FF5A1F] text-black text-xs font-bold hover:bg-orange-500 transition-colors cursor-pointer mt-4"
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitInquiry} className="my-4 space-y-4">
+                  {/* Selected Frame Preview if any */}
+                  {inquireFrame && (
+                    <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
+                      <img
+                        src={inquireFrame.src}
+                        alt={inquireFrame.title}
+                        className="w-16 h-16 rounded-xl object-cover"
+                      />
+                      <div className="overflow-hidden">
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-[#FF5A1F]">Selected Frame</span>
+                        <h4 className="font-syne font-bold text-xs text-white truncate">{inquireFrame.title}</h4>
+                        <p className="text-[11px] text-neutral-400">{inquireFrame.location}</p>
+                      </div>
                     </div>
-                    <h4 className="font-syne font-extrabold text-xl text-white">License Granted!</h4>
-                    <p className="text-xs text-neutral-300 max-w-xs mx-auto leading-relaxed">
-                      Your High-Res 4K Frame download links have been sent to your email.
-                    </p>
-                    <button
-                      onClick={() => {
-                        setCheckoutSuccess(false);
-                        handleClearCart();
-                        setIsCartOpen(false);
-                      }}
-                      className="px-6 py-2.5 rounded-full bg-[#FF5A1F] text-black text-xs font-bold hover:bg-orange-500 transition-colors cursor-pointer mt-2"
+                  )}
+
+                  {/* Name Input */}
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Your Name *</label>
+                    <input
+                      type="text"
+                      required
+                      value={inquireName}
+                      onChange={(e) => setInquireName(e.target.value)}
+                      placeholder="e.g. Alex Morgan"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF5A1F]"
+                    />
+                  </div>
+
+                  {/* Email Input */}
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Your Email Address *</label>
+                    <input
+                      type="email"
+                      required
+                      value={inquireEmail}
+                      onChange={(e) => setInquireEmail(e.target.value)}
+                      placeholder="e.g. alex@example.com"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF5A1F]"
+                    />
+                  </div>
+
+                  {/* Inquiry Type */}
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Inquiry Category</label>
+                    <select
+                      value={inquireType}
+                      onChange={(e) => setInquireType(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#14141d] border border-white/15 text-xs text-white focus:outline-none focus:border-[#FF5A1F]"
                     >
-                      Done
+                      <option value="8K High-Res Print">8K High-Res Canvas / Print Licensing</option>
+                      <option value="Commercial Rights">Commercial Advertising & Broadcast Rights</option>
+                      <option value="Fine Art Exhibition">Fine Art Exhibition & Gallery Purchase</option>
+                      <option value="Custom Commission">Custom Photography Commission</option>
+                    </select>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Message / Requirements</label>
+                    <textarea
+                      rows={3}
+                      value={inquireMessage}
+                      onChange={(e) => setInquireMessage(e.target.value)}
+                      placeholder="Describe your project, print size preferences, or usage details..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF5A1F] resize-none"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="w-full py-3 rounded-full bg-[#FF5A1F] text-black font-syne font-extrabold text-xs sm:text-sm hover:bg-orange-500 transition-all shadow-xl shadow-[#FF5A1F]/20 cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Send className="h-4 w-4" />
+                      <span>Submit Inquiry</span>
                     </button>
                   </div>
-                ) : cartItems.length > 0 ? (
-                  cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10"
-                    >
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-14 h-14 rounded-xl object-cover"
-                      />
-                      <div className="flex-1 overflow-hidden">
-                        <h4 className="font-syne font-bold text-xs text-white truncate">{item.title}</h4>
-                        <p className="text-[10px] text-[#FF5A1F] font-mono">{item.licenseType}</p>
-                        <p className="text-xs font-bold text-white mt-1">${item.price}</p>
-                      </div>
-                      <div className="flex items-center gap-1.5 bg-black/60 p-1 rounded-xl border border-white/10">
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id, -1)}
-                          className="p-1 rounded-lg hover:bg-white/10 text-white transition-colors cursor-pointer"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="text-xs font-mono px-1 font-bold">{item.quantity}</span>
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id, 1)}
-                          className="p-1 rounded-lg hover:bg-white/10 text-white transition-colors cursor-pointer"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                      <button
-                        onClick={() => handleRemoveFromCart(item.id)}
-                        className="p-1.5 text-neutral-400 hover:text-red-400 transition-colors cursor-pointer"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="py-12 text-center text-neutral-400">
-                    <ShoppingBag className="h-10 w-10 mx-auto text-neutral-600 mb-2" />
-                    <p className="text-sm">Your cart is currently empty.</p>
+                </form>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Sign In / Account Profile Modal */}
+        {isSignInOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSignInOpen(false)}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md bg-[#0e0e13] border border-white/20 rounded-3xl p-6 shadow-2xl text-white relative"
+            >
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2.5 rounded-xl bg-[#FF5A1F] text-black">
+                    <User className="h-5 w-5" />
                   </div>
-                )}
+                  <div>
+                    <h3 className="font-syne font-bold text-lg text-white">
+                      {currentUser ? 'Collector Profile' : 'Sign In'}
+                    </h3>
+                    <p className="text-xs text-neutral-400">
+                      {currentUser ? 'Manage your account & licenses' : 'Access high-res frames & VIP perks'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsSignInOpen(false)}
+                  className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
 
-              {!checkoutSuccess && cartItems.length > 0 && (
-                <div className="pt-4 border-t border-white/10 space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-neutral-400">Total Price</span>
-                    <span className="font-syne font-extrabold text-xl text-[#FF5A1F]">${totalCartPrice}</span>
+              {currentUser ? (
+                /* Logged In Profile View */
+                <div className="my-5 space-y-5">
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+                    <div className="w-14 h-14 rounded-full bg-[#FF5A1F] text-black flex items-center justify-center font-extrabold text-xl shadow-lg border-2 border-white/30">
+                      {currentUser.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-syne font-bold text-base text-white">{currentUser.name}</h4>
+                      <p className="text-xs text-neutral-400">{currentUser.email}</p>
+                      <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-[#FF5A1F]/20 text-[#FF5A1F] text-[10px] font-mono font-bold border border-[#FF5A1F]/30">
+                        {currentUser.plan || 'VIP Collector Pass'}
+                      </span>
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-center">
+                    <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                      <p className="text-xs text-neutral-400">Liked Frames</p>
+                      <p className="text-lg font-syne font-extrabold text-[#FF5A1F]">{likedCount}</p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                      <p className="text-xs text-neutral-400">Account Access</p>
+                      <p className="text-xs font-syne font-bold text-emerald-400 mt-1 flex items-center justify-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>Active 8K Rights</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full py-2.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-syne font-bold text-xs hover:bg-red-500/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Sign In Form View */
+                <div className="my-5 space-y-4">
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Email Address</label>
+                    <input
+                      type="email"
+                      value={signInEmail}
+                      onChange={(e) => setSignInEmail(e.target.value)}
+                      placeholder="e.g. collector@nihal.frames"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF5A1F]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-mono text-neutral-300 block mb-1.5">Password</label>
+                    <input
+                      type="password"
+                      value={signInPassword}
+                      onChange={(e) => setSignInPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#FF5A1F]"
+                    />
+                  </div>
+
                   <button
-                    onClick={() => setCheckoutSuccess(true)}
-                    className="w-full py-3 rounded-full bg-[#FF5A1F] text-black font-syne font-extrabold text-sm hover:bg-orange-500 transition-all shadow-xl shadow-[#FF5A1F]/20 cursor-pointer flex items-center justify-center gap-2"
+                    type="button"
+                    onClick={() => handleSignIn()}
+                    className="w-full py-3 rounded-full bg-[#FF5A1F] text-black font-syne font-extrabold text-xs sm:text-sm hover:bg-orange-500 transition-all shadow-xl shadow-[#FF5A1F]/20 cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <span>Proceed to Checkout</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <LogIn className="h-4 w-4" />
+                    <span>Sign In</span>
+                  </button>
+
+                  <div className="relative my-4 text-center">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-white/10" />
+                    </div>
+                    <span className="relative bg-[#0e0e13] px-3 text-[10px] text-neutral-500 font-mono uppercase">
+                      Or Quick Login
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSignIn('nihal.collector@gmail.com', 'Nihal Collector')}
+                    className="w-full py-2.5 rounded-full bg-white/10 text-white font-syne font-bold text-xs hover:bg-white/20 transition-all cursor-pointer border border-white/15 flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="h-4 w-4 text-[#FF5A1F]" />
+                    <span>Demo Sign In as Collector</span>
                   </button>
                 </div>
               )}
@@ -1390,8 +1522,8 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
           </motion.div>
         )}
 
-        {/* Added to Cart Toast Notification */}
-        {addedToast && (
+        {/* Toast Notification */}
+        {(addedToast || signInToast) && (
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1401,7 +1533,7 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
             <div className="p-1.5 rounded-full bg-[#FF5A1F] text-black">
               <Check className="h-4 w-4" />
             </div>
-            <span className="text-xs font-syne font-bold">{addedToast}</span>
+            <span className="text-xs font-syne font-bold">{addedToast || signInToast}</span>
           </motion.div>
         )}
 
@@ -1467,11 +1599,15 @@ export default function GalleryPage({ onBack, onNavigateSection }: GalleryPagePr
                     </span>
                   </button>
                   <button
-                    onClick={() => handleAddToCart(selectedPhoto)}
+                    onClick={() => {
+                      const photoToInquire = selectedPhoto;
+                      setSelectedPhoto(null);
+                      handleOpenInquiry(photoToInquire);
+                    }}
                     className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF5A1F] text-black text-xs font-bold hover:bg-orange-500 transition-colors cursor-pointer shadow-md"
                   >
-                    <ShoppingCart className="h-3.5 w-3.5" />
-                    <span>Add to Cart ($29)</span>
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    <span>Inquire Frame</span>
                   </button>
                   <a
                     href={selectedPhoto.src}

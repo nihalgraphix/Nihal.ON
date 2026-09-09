@@ -10,7 +10,7 @@ import {
   FAQItem
 } from '../types';
 
-import heroPortrait from '../assets/images/hero_portrait_1785413008544.jpg';
+import heroPortrait from './images/3ebaca72-c048-4ad3-ace0-649046417171.png';
 import aboutPortrait from '../assets/images/about_portrait_1785413022971.jpg';
 
 export { heroPortrait, aboutPortrait };

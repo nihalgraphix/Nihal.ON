@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Sparkles, ArrowDown, ChevronRight, ChevronLeft } from 'lucide-react';
+import aiSprintLeaderImage from './image/3ebaca72-c048-4ad3-ace0-649046417171.png';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 interface HeroProps {
@@ -103,7 +104,7 @@ export default function Hero({ onOpenResumeModal }: HeroProps) {
               {/* Subject image blending seamlessly into orange canvas */}
               <div className="relative w-full h-full flex items-end justify-center">
                 <img
-                  src="/src/assets/images/regenerated_image_1785750001960.png"
+                  src={aiSprintLeaderImage}
                   alt="AI Sprint Leader"
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover object-top rounded-3xl filter brightness-105 contrast-105 drop-shadow-2xl pointer-events-auto"

@@ -72,13 +72,11 @@ export default function About({ onOpenResumeModal }: AboutProps) {
       <div className="pointer-events-none absolute top-10 left-10 h-64 w-64 rounded-full bg-[#E84A10]/10 blur-[140px]" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Main Section Header: ✳ SELF-SUMMARY ✳ */}
-        <div className="flex items-center justify-center gap-3 sm:gap-5 mb-14 sm:mb-20 text-center">
-          <StarburstIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#FF5A1F]" />
+        {/* Main Section Header: ABOUT */}
+        <div className="flex items-center justify-center mb-14 sm:mb-20 text-center">
           <h2 className="font-syne text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white uppercase">
-            Self-Summary
+            About
           </h2>
-          <StarburstIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#FF5A1F]" />
         </div>
 
         {/* Bento Grid Layout Container */}

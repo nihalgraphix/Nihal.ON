@@ -12,6 +12,14 @@ import {
 
 import heroPortrait from '../assets/images/hero_portrait_1785413008544.jpg';
 import aboutPortrait from '../assets/images/about_portrait_1785413022971.jpg';
+import galleryImageOne from '../components/image/1000009034.jpg';
+import galleryImageTwo from '../components/image/1000009035.jpg';
+import galleryImageThree from '../components/image/1000009036.jpg';
+import galleryImageFour from '../components/image/16337.png';
+import galleryImageFive from '../components/image/20251106_112821(1)(1).jpg';
+import galleryImageSix from '../components/image/20251106_172421.jpg';
+import galleryImageSeven from '../components/image/IMG_20251205_205918_106~2.jpg';
+import galleryImageEight from '../components/image/Zenitsu 3.png';
 
 export { heroPortrait, aboutPortrait };
 
@@ -587,7 +595,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-1",
     title: "Selected projects from the last month",
     category: "Photography",
-    image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageOne,
     aspectRatio: "aspect-[3/4]",
     date: "2026",
     likes: 842
@@ -596,7 +604,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-2",
     title: "Otherworldly places located on Earth",
     category: "Concepts",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageTwo,
     aspectRatio: "aspect-[3/4]",
     date: "2026",
     likes: 912
@@ -605,7 +613,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-3",
     title: "Visualizing distorted sound mixes",
     category: "Motion",
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageThree,
     aspectRatio: "aspect-[3/4]",
     date: "2026",
     likes: 1240
@@ -614,7 +622,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-4",
     title: "Getting that film look in post",
     category: "Branding",
-    image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageFour,
     aspectRatio: "aspect-[3/4]",
     date: "2025",
     likes: 670
@@ -623,7 +631,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-5",
     title: "Cybernetic Silhouette & Neon Lights",
     category: "Photography",
-    image: heroPortrait,
+    image: galleryImageFive,
     aspectRatio: "aspect-[3/4]",
     date: "2026",
     likes: 540
@@ -632,7 +640,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-6",
     title: "Fluxora Ambient Studio & Liquid Art",
     category: "UI",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageSix,
     aspectRatio: "aspect-[3/4]",
     date: "2025",
     likes: 780
@@ -641,7 +649,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-7",
     title: "Aetheria Node Spatial Canvas",
     category: "UI",
-    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageSeven,
     aspectRatio: "aspect-[3/4]",
     date: "2025",
     likes: 930
@@ -650,7 +658,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: "gal-8",
     title: "Luminary Minimal Runway Experience",
     category: "Branding",
-    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1000&auto=format&fit=crop",
+    image: galleryImageEight,
     aspectRatio: "aspect-[3/4]",
     date: "2025",
     likes: 1120

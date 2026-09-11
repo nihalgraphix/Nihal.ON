@@ -206,7 +206,7 @@ export default function Footer({
           </div>
 
           <div className="flex items-center gap-4 text-neutral-400 font-mono">
-            <span>San Francisco</span>
+            <span>Kochi, Kerala, India</span>
             <span>{currentTime || '12:00 PM'}</span>
             <span className="flex items-center gap-1 text-white font-bold">
               <span>21°C</span>

@@ -177,7 +177,7 @@ export default function App() {
           viewport={{ once: true, amount: 0.1, margin: "-40px" }}
           variants={sectionVariants}
         >
-          <About />
+          <About onOpenResumeModal={() => setResumeModalOpen(true)} />
         </motion.div>
 
         <motion.div

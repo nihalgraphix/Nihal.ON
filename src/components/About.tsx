@@ -1,224 +1,373 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
-  User,
-  Target,
-  Eye,
-  Award,
-  Sparkles,
-  CheckCircle2,
-  Code,
-  Compass,
-  Zap,
-  Globe
+  ArrowUpRight,
+  Github,
+  Linkedin,
+  Twitter,
+  Dribbble,
+  Sparkles
 } from 'lucide-react';
-import { PERSONAL_INFO, aboutPortrait, CREATIVE_MANIFESTO } from '../data/portfolioData';
+import { PERSONAL_INFO, aboutPortrait } from '../data/portfolioData';
 
-export default function About() {
-  const [activeTab, setActiveTab] = useState<'story' | 'mission' | 'manifesto' | 'values'>('story');
+// 8-Pointed Starburst Icon for Header with #FF5A1F accent
+function StarburstIcon({ className = "w-6 h-6 sm:w-8 sm:h-8 text-[#FF5A1F]" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" fill="currentColor">
+      <path d="M16 0L17.9 11.2L27.3 4.7L20.8 14.1L32 16L20.8 17.9L27.3 27.3L17.9 20.8L16 32L14.1 20.8L4.7 27.3L11.2 17.9L0 16L11.2 14.1L4.7 4.7L14.1 11.2Z" />
+    </svg>
+  );
+}
 
-  const tabItems = [
-    { id: 'story', label: 'My Story', icon: User },
-    { id: 'mission', label: 'Mission & Vision', icon: Target },
-    { id: 'manifesto', label: 'Design Manifesto', icon: Sparkles },
-    { id: 'values', label: 'Core Values', icon: Compass },
-  ];
+// 4-Pointed Sparkle Star Icon for Cards
+function SparkleStar({ className = "w-7 h-7 text-[#FF5A1F]" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4772 12 22C12 16.4772 16.4772 12 22 12C16.4772 12 12 7.52285 12 2Z"
+        fill="currentColor"
+        opacity="0.9"
+      />
+    </svg>
+  );
+}
+
+// Elegant Handcrafted Signature SVG
+function SignatureGraphic({ className = "w-36 h-14 text-white/80" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 240 80"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15 50 Q 25 10 35 45 T 55 40 Q 65 20 75 55 T 95 38" />
+      <path d="M85 45 Q 110 40 135 46 Q 160 48 185 40" />
+      <path d="M45 28 Q 70 20 100 24" />
+      <path d="M140 25 Q 155 15 165 42 Q 175 60 190 35 Q 200 20 215 48" />
+      <circle cx="225" cy="46" r="2.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+interface AboutProps {
+  onOpenResumeModal?: () => void;
+}
+
+export default function About({ onOpenResumeModal }: AboutProps) {
+  const scrollToContact = () => {
+    const el = document.getElementById('contact');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section id="about" className="relative py-28 bg-[#060606] overflow-hidden">
-      {/* Background Ambient Glow */}
-      <div className="pointer-events-none absolute top-1/3 right-0 h-96 w-96 rounded-full bg-[#FF5A1F]/10 blur-[140px]" />
+    <section id="about" className="relative py-24 sm:py-32 bg-[#060606] text-white overflow-hidden selection:bg-[#FF5A1F] selection:text-black">
+      {/* Background Ambient Warm/Orange Glows matching website theme */}
+      <div className="pointer-events-none absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full bg-[#FF5A1F]/10 blur-[180px]" />
+      <div className="pointer-events-none absolute bottom-10 right-10 h-80 w-80 rounded-full bg-[#FF5A1F]/15 blur-[140px]" />
+      <div className="pointer-events-none absolute top-10 left-10 h-64 w-64 rounded-full bg-[#E84A10]/10 blur-[140px]" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-space uppercase tracking-widest text-[#FF5A1F] mb-3">
-              <span className="h-2 w-2 rounded-full bg-[#FF5A1F]" />
-              <span>Behind The Work</span>
-            </div>
-            <h2 className="font-syne text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Shaping Digital Experiences That Make Life Simpler.
-            </h2>
-          </div>
-          <p className="text-neutral-400 max-w-md text-sm font-sans leading-relaxed">
-            I am a Lead Creative Technologist based in San Francisco, combining high-fashion editorial design with modern full-stack web engineering.
-          </p>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Main Section Header: ✳ SELF-SUMMARY ✳ */}
+        <div className="flex items-center justify-center gap-3 sm:gap-5 mb-14 sm:mb-20 text-center">
+          <StarburstIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#FF5A1F]" />
+          <h2 className="font-syne text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white uppercase">
+            Self-Summary
+          </h2>
+          <StarburstIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#FF5A1F]" />
         </div>
 
-        {/* Split Editorial Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Image & Stats Badges */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative"
-          >
-            <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#111111] shadow-2xl">
-              <img
-                src={aboutPortrait}
-                alt="Nihal . ON Studio Portrait"
-                referrerPolicy="no-referrer"
-                className="w-full h-[520px] object-cover object-center filter saturate-[1.1] contrast-[1.05] hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#060606] via-transparent to-transparent opacity-80" />
+        {/* Bento Grid Layout Container */}
+        <div className="space-y-6 sm:space-y-7">
+          
+          {/* TOP ROW: [ Portrait Card ] + [ Self-Introduction Card ] */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-7 items-stretch">
+            
+            {/* Left: Portrait Card with warm gradient frame matching #FF5A1F */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-4 rounded-[32px] p-6 sm:p-7 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-center items-center relative group transition-all duration-300"
+            >
+              <div className="w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-[24px] overflow-hidden relative bg-gradient-to-tr from-[#FF5A1F] via-[#E84A10] to-[#FF9254] shadow-inner p-1">
+                <img
+                  src={aboutPortrait}
+                  alt={PERSONAL_INFO.name}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center rounded-[22px] filter contrast-[1.08] saturate-[1.05] group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 rounded-[22px] bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </motion.div>
 
-              {/* Glowing Badge on Image */}
-              <div className="absolute top-6 left-6 p-4 rounded-2xl glass-card border border-white/10">
-                <div className="font-syne text-2xl font-extrabold text-white">6+ Years</div>
-                <div className="text-xs text-[#FF5A1F] font-space font-semibold">Senior Creative Direction</div>
+            {/* Right: Self Introduction / Bio Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="lg:col-span-8 rounded-[32px] p-8 sm:p-12 lg:p-14 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-between relative transition-all duration-300"
+            >
+              <div className="mb-6">
+                <SparkleStar className="w-8 h-8 text-[#FF5A1F] mb-6 sm:mb-8" />
+                <h3 className="font-syne text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+                  {PERSONAL_INFO.name}
+                </h3>
+                <p className="text-neutral-400 text-sm sm:text-base font-sans leading-relaxed max-w-2xl">
+                  I am a San Francisco-based Creative Technologist & Senior Product Designer with a focus on web design, high-performance UI systems, and full-stack development. I have a diverse range of experience having worked across venture-backed startups, creative agencies, and global product studios.
+                </p>
               </div>
 
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass-card border border-white/10 flex items-center justify-between">
-                <div>
-                  <div className="text-xs text-neutral-400 font-space uppercase">Global Impact</div>
-                  <div className="text-sm font-syne font-bold text-white">50+ Worldwide Clients</div>
+              <div className="pt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-400 border-t border-white/5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF5A1F] animate-pulse" />
+                  <span className="text-neutral-300">{PERSONAL_INFO.status}</span>
                 </div>
-                <Globe className="h-6 w-6 text-[#FF5A1F]" />
+                <span className="text-neutral-600 hidden sm:inline">•</span>
+                <div className="text-neutral-400">{PERSONAL_INFO.location}</div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Right Column: Tabbed Content & Story */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            className="lg:col-span-7 flex flex-col space-y-8"
-          >
-            {/* Nav Tabs */}
-            <div className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-[#111111] border border-white/10 w-fit">
-              {tabItems.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold font-space transition-all ${
-                      activeTab === tab.id
-                        ? 'bg-[#FF5A1F] text-black shadow-lg shadow-[#FF5A1F]/30'
-                        : 'text-neutral-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+          </div>
 
-            {/* Tab Panels */}
-            <div className="min-h-[260px] glass-card p-6 sm:p-8 rounded-3xl border border-white/10">
-              <AnimatePresence mode="wait">
-                {activeTab === 'story' && (
-                  <motion.div
-                    key="story"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                  >
-                    <h3 className="font-syne text-xl font-bold text-white">
-                      From Graphic Arts to High-Performance Code
-                    </h3>
-                    <p className="text-neutral-300 text-sm leading-relaxed">
-                      My journey began in high-fashion editorial print and graphic design in New York. As the web evolved, I recognized that code is the ultimate creative medium. Over the past 6+ years, I have helped venture-backed startups and global brands build software that feels as deliberate and tangible as physical luxury items.
-                    </p>
-                    <p className="text-neutral-400 text-sm leading-relaxed">
-                      Whether architecting a dark-mode spatial canvas or fine-tuning sub-100ms route transitions, my work focuses on eliminating cognitive friction for users while evoking delight.
-                    </p>
-                  </motion.div>
-                )}
-
-                {activeTab === 'mission' && (
-                  <motion.div
-                    key="mission"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-6"
-                  >
-                    <div>
-                      <h4 className="flex items-center gap-2 font-syne text-lg font-bold text-white mb-2">
-                        <Target className="h-5 w-5 text-[#FF5A1F]" /> My Mission
-                      </h4>
-                      <p className="text-neutral-300 text-sm leading-relaxed">
-                        To elevate digital products by bridging the gap between artistic vision and rock-solid full-stack software engineering.
-                      </p>
-                    </div>
-                    <div className="pt-4 border-t border-white/10">
-                      <h4 className="flex items-center gap-2 font-syne text-lg font-bold text-white mb-2">
-                        <Eye className="h-5 w-5 text-[#FF5A1F]" /> My Vision
-                      </h4>
-                      <p className="text-neutral-300 text-sm leading-relaxed">
-                        Creating a web ecosystem where performant 60fps animations, intelligent AI assistants, and accessible dark aesthetics are standard across every digital touchpoint.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeTab === 'manifesto' && (
-                  <motion.div
-                    key="manifesto"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-4"
-                  >
-                    {CREATIVE_MANIFESTO.map((item, idx) => (
-                      <div key={idx} className="p-3.5 rounded-2xl bg-white/5 border border-white/5">
-                        <h4 className="font-syne text-xs font-bold text-[#FF5A1F] mb-1">{item.title}</h4>
-                        <p className="text-xs text-neutral-300 leading-relaxed">{item.content}</p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-
-                {activeTab === 'values' && (
-                  <motion.div
-                    key="values"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                  >
-                    {[
-                      { title: "Bespoke Precision", desc: "No cookie-cutter templates. Every layout is crafted from first principles." },
-                      { title: "60fps Motion", desc: "Silky smooth transitions that feel hardware-accelerated." },
-                      { title: "Type Safety", desc: "Clean TypeScript architecture with zero compromise on stability." },
-                      { title: "Direct Collaboration", desc: "You work directly with the creator, not junior account managers." },
-                    ].map((val, i) => (
-                      <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-between">
-                        <div className="font-syne text-sm font-bold text-white mb-1">{val.title}</div>
-                        <p className="text-xs text-neutral-400">{val.desc}</p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Bottom Quick CTA */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="text-xs font-space text-neutral-400">
-                Ready to elevate your digital presence?
+          {/* MIDDLE ROW: [ EXPERIENCE Card ] + [ EDUCATION Card ] */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 items-stretch">
+            
+            {/* Experience Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="rounded-[32px] p-8 sm:p-10 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-between transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h4 className="text-xs font-mono font-bold tracking-widest text-[#FF5A1F] uppercase">
+                  Experience
+                </h4>
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A1F]" />
               </div>
-              <button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex items-center gap-2 rounded-full border border-[#FF5A1F]/50 bg-[#FF5A1F]/10 px-5 py-2.5 text-xs font-semibold text-[#FF5A1F] hover:bg-[#FF5A1F] hover:text-black transition-all"
-              >
-                <span>Get In Touch</span>
-                <Zap className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </motion.div>
+
+              <div className="space-y-7">
+                <div>
+                  <span className="text-xs font-mono text-[#FF5A1F] font-semibold tracking-wide">
+                    2023 - PRESENT
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Lead Creative Technologist & Director
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    NIHAL Creative Studio
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                  <span className="text-xs font-mono text-neutral-500 font-medium tracking-wide">
+                    2021 - 2023
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Senior UI/UX Architect & Staff Engineer
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Aetheria AI Labs
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                  <span className="text-xs font-mono text-neutral-500 font-medium tracking-wide">
+                    2019 - 2021
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Senior Motion & Frontend Developer
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Vortex Digital Agency
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Education Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="rounded-[32px] p-8 sm:p-10 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-between transition-all duration-300 group"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <h4 className="text-xs font-mono font-bold tracking-widest text-[#FF5A1F] uppercase">
+                  Education
+                </h4>
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A1F]" />
+              </div>
+
+              <div className="space-y-7">
+                <div>
+                  <span className="text-xs font-mono text-[#FF5A1F] font-semibold tracking-wide">
+                    2018 - 2022
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Bachelor Degree in Computer Science & Interactive Media
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    University of California, Berkeley
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                  <span className="text-xs font-mono text-neutral-500 font-medium tracking-wide">
+                    2022 - 2024
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Master Degree in Human-Computer Interaction
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Stanford University Center for Design Research
+                  </p>
+                </div>
+
+                <div className="pt-6 border-t border-white/5">
+                  <span className="text-xs font-mono text-neutral-500 font-medium tracking-wide">
+                    2024 - 2025
+                  </span>
+                  <h5 className="text-base sm:text-lg font-syne font-bold text-white mt-1">
+                    Advanced Creative Direction & WebGL Systems
+                  </h5>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Awwwards Masterclass & Design Institute
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+
+          {/* BOTTOM ROW: [ Profiles Card ] + [ Let's work together Card ] + [ Credentials Card ] */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-7 items-stretch">
+            
+            {/* Card 1: Profiles Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="md:col-span-3 rounded-[32px] p-6 sm:p-7 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-between group transition-all duration-300"
+            >
+              {/* Circular Social Icon Grid */}
+              <div className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-black/50 border border-white/5 mb-6">
+                <a
+                  href={PERSONAL_INFO.dribbble}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#FF5A1F] hover:text-black text-neutral-400 border border-white/10 hover:border-[#FF5A1F] flex items-center justify-center transition-all duration-300"
+                  title="Dribbble"
+                >
+                  <Dribbble className="w-4 h-4" />
+                </a>
+                <a
+                  href={PERSONAL_INFO.twitter}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#FF5A1F] hover:text-black text-neutral-400 border border-white/10 hover:border-[#FF5A1F] flex items-center justify-center transition-all duration-300"
+                  title="Twitter / X"
+                >
+                  <Twitter className="w-4 h-4" />
+                </a>
+                <a
+                  href={PERSONAL_INFO.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#FF5A1F] hover:text-black text-neutral-400 border border-white/10 hover:border-[#FF5A1F] flex items-center justify-center transition-all duration-300"
+                  title="GitHub"
+                >
+                  <Github className="w-4 h-4" />
+                </a>
+              </div>
+
+              {/* Bottom Label & Action */}
+              <div className="flex items-end justify-between">
+                <div>
+                  <span className="text-[10px] font-mono tracking-widest text-[#FF5A1F] uppercase block">
+                    Stay with me
+                  </span>
+                  <h5 className="text-lg font-syne font-bold text-white mt-0.5">
+                    Profiles
+                  </h5>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:text-black group-hover:border-[#FF5A1F] group-hover:bg-[#FF5A1F] transition-all">
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 2: Let's work together. (Wider Center Card) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              onClick={scrollToContact}
+              className="md:col-span-6 rounded-[32px] p-7 sm:p-9 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/40 shadow-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 relative overflow-hidden"
+            >
+              <div className="pointer-events-none absolute -right-10 -bottom-10 w-48 h-48 bg-[#FF5A1F]/15 rounded-full blur-3xl group-hover:bg-[#FF5A1F]/25 transition-all" />
+
+              <SparkleStar className="w-8 h-8 text-[#FF5A1F] mb-6" />
+
+              <div className="my-auto py-2">
+                <h4 className="font-syne text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight">
+                  Let&apos;s <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF5A1F] via-[#FF8040] to-[#FFA066] group-hover:brightness-110 transition-all">
+                    work together.
+                  </span>
+                </h4>
+              </div>
+
+              <div className="flex items-center justify-end mt-4">
+                <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:text-black group-hover:border-[#FF5A1F] group-hover:bg-[#FF5A1F] transition-all">
+                  <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 3: Credentials Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              onClick={onOpenResumeModal}
+              className="md:col-span-3 rounded-[32px] p-6 sm:p-7 bg-gradient-to-br from-[#161619] via-[#0f0f12] to-[#0a0a0c] border border-white/[0.08] hover:border-[#FF5A1F]/30 shadow-2xl flex flex-col justify-between group transition-all duration-300 cursor-pointer"
+            >
+              {/* Artistic Signature */}
+              <div className="flex items-center justify-center py-3">
+                <SignatureGraphic className="w-40 h-14 text-white/70 group-hover:text-[#FF5A1F] transition-colors duration-300" />
+              </div>
+
+              {/* Bottom Label & Action */}
+              <div className="flex items-end justify-between mt-4">
+                <div>
+                  <span className="text-[10px] font-mono tracking-widest text-[#FF5A1F] uppercase block">
+                    More about me
+                  </span>
+                  <h5 className="text-lg font-syne font-bold text-white mt-0.5">
+                    Credentials
+                  </h5>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 group-hover:text-black group-hover:border-[#FF5A1F] group-hover:bg-[#FF5A1F] transition-all">
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+
         </div>
       </div>
     </section>
